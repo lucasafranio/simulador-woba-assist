@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9bb0c4"></stop>
+      <stop offset="1" stop-color="#dfe6ec"></stop>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b4332"></stop>
+      <stop offset="1" stop-color="#2f2218"></stop>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3a36"></stop>
+      <stop offset="1" stop-color="#1f1f1c"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="480" fill="#1c1c19"></rect>
+  
+  <rect x="0" y="40" width="520" height="320" fill="url(#wall)"></rect>
+  <g>
+    
+    <rect x="20" y="60" width="490" height="260" fill="url(#sky)"></rect>
+    
+    <g fill="#7a90a4" opacity="0.85">
+      <rect x="40" y="200" width="40" height="120"></rect>
+      <rect x="90" y="160" width="50" height="160"></rect>
+      <rect x="150" y="180" width="36" height="140"></rect>
+      <rect x="200" y="140" width="60" height="180"></rect>
+      <rect x="270" y="180" width="48" height="140"></rect>
+      <rect x="330" y="160" width="52" height="160"></rect>
+      <rect x="395" y="210" width="40" height="110"></rect>
+      <rect x="445" y="180" width="60" height="140"></rect>
+    </g>
+    
+    <g stroke="#cfd5da" stroke-width="3">
+      <line x1="180" y1="60" x2="180" y2="320"></line>
+      <line x1="345" y1="60" x2="345" y2="320"></line>
+      <line x1="20" y1="200" x2="510" y2="200"></line>
+    </g>
+    <rect x="20" y="60" width="490" height="260" fill="none" stroke="#cfd5da" stroke-width="4"></rect>
+  </g>
+  
+  <rect x="520" y="40" width="280" height="320" fill="#2a2a26"></rect>
+  <rect x="560" y="120" width="220" height="140" rx="6" fill="#0a0a0a" stroke="#3f3f3a" stroke-width="3"></rect>
+  <rect x="572" y="132" width="196" height="116" rx="3" fill="#0e1311"></rect>
+  
+  <g fill="#fff1bf">
+    <circle cx="220" cy="42" r="5"></circle>
+    <circle cx="320" cy="42" r="5"></circle>
+    <circle cx="420" cy="42" r="5"></circle>
+    <circle cx="520" cy="42" r="5"></circle>
+    <circle cx="620" cy="42" r="5"></circle>
+  </g>
+  <g stroke="#888" stroke-width="1">
+    <line x1="220" y1="0" x2="220" y2="42"></line>
+    <line x1="320" y1="0" x2="320" y2="42"></line>
+    <line x1="420" y1="0" x2="420" y2="42"></line>
+    <line x1="520" y1="0" x2="520" y2="42"></line>
+    <line x1="620" y1="0" x2="620" y2="42"></line>
+  </g>
+  
+  <rect x="0" y="360" width="800" height="120" fill="url(#floor)"></rect>
+  
+  <polygon points="120,360 680,360 720,440 80,440" fill="#3a2818"></polygon>
+  <polygon points="120,360 680,360 660,378 140,378" fill="#54391f"></polygon>
+  
+  <g fill="#0f0f0e">
+    <rect x="160" y="280" width="60" height="120" rx="8"></rect>
+    <rect x="270" y="280" width="60" height="120" rx="8"></rect>
+    <rect x="380" y="280" width="60" height="120" rx="8"></rect>
+    <rect x="490" y="280" width="60" height="120" rx="8"></rect>
+    <rect x="600" y="280" width="60" height="120" rx="8"></rect>
+  </g>
+  
+  <rect x="370" y="332" width="10" height="32" fill="#dfe7e1" opacity="0.6"></rect>
+</svg>

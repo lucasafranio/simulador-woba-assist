@@ -1,0 +1,90 @@
+@font-face {
+  font-family: "Host Grotesk";
+  src: url("../fonts/HostGrotesk-VariableFont_wght.ttf") format("truetype-variations");
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/Manrope-VariableFont_wght.ttf") format("truetype-variations");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Woba tokens (kept narrow — only what the simulator needs) */
+  --w-yellow: #f9e10d;
+  --w-yellow-fg: #1a1810;
+  --w-success: #81c42b;
+  --w-success-fg: #2f4d10;
+
+  /* Chat surface palette — original, evoking dark messaging without
+     directly copying any branded app's exact tokens. */
+  --chat-bg: #0d1611;
+  --chat-bg-2: #111d17;
+  --chat-header: #16221c;
+  --chat-input: #1a2520;
+  --chat-bubble-bot: #1e2b25;
+  --chat-bubble-bot-2: #243630;
+  --chat-bubble-user: #134d3c;
+  --chat-bubble-user-2: #0f3f31;
+  --chat-text: #e8efe9;
+  --chat-text-2: #b6c4bc;
+  --chat-text-3: #82948b;
+  --chat-link: #5fd07a;       /* button text / inline link inside cards */
+  --chat-accent: #25c265;     /* send / mic / action accent */
+  --chat-divider: #ffffff14;
+  --chat-shadow: 0 1px 1.5px rgba(0,0,0,0.35);
+
+  --font-display: "Host Grotesk", system-ui, sans-serif;
+  --font-ui: "Manrope", system-ui, sans-serif;
+  --font-chat: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0a0a0a;
+  color: var(--chat-text);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Page layout — center the phone on a soft canvas */
+.stage {
+  min-height: 100vh;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  background:
+    radial-gradient(1200px 800px at 50% -20%, #1a1916 0%, #0a0a0a 60%),
+    #0a0a0a;
+  padding: 24px 16px;
+}
+
+/* Caption shown next to the phone (small screens hide it) */
+.cap {
+  position: fixed;
+  left: 28px;
+  bottom: 24px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #6a6a64;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.cap b { color: var(--w-yellow); font-weight: 700; }
+
+@media (max-width: 720px) {
+  .stage { padding: 0; }
+  .cap { display: none; }
+}
+
+/* Tap helper — clickable interactive UI uses cursor pointer */
+button, .tap { cursor: pointer; }
+button { font-family: inherit; }

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Ideação — antes da próxima crit</title>
+  <link rel="stylesheet" href="styles/propostas.css"/>
+  <style>
+    /* ─────────── Ideação overrides — looser, mood-board feel ─────────── */
+    body { background: var(--canvas); }
+    .page { padding: 56px 48px 96px; max-width: 1400px; }
+    @media (max-width: 720px) { .page { padding: 28px 18px 60px; } }
+
+    /* ─── Cover ─── */
+    .cover-i {
+      background: var(--paper);
+      border-radius: 24px;
+      padding: 64px 64px 56px;
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+    }
+    .cover-i .meta {
+      display: flex; gap: 12px; align-items: center;
+      font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--ink-3); font-weight: 600; margin-bottom: 36px;
+    }
+    .cover-i .meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); }
+    .cover-i h1 { margin: 0; max-width: 18ch; }
+    .cover-i .lede { margin-top: 22px; max-width: 60ch; font-size: 19px; line-height: 1.55; color: var(--ink-2); }
+    .cover-i .stamp {
+      position: absolute; top: 48px; right: 56px;
+      background: var(--yellow); color: var(--yellow-fg);
+      padding: 12px 18px; border-radius: 12px;
+      font-family: var(--display); font-weight: 700; font-size: 14px;
+      letter-spacing: -0.005em;
+      transform: rotate(4deg);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .cover-i .stamp small {
+      display: block; font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 2px;
+    }
+    @media (max-width: 720px) {
+      .cover-i { padding: 32px 24px 36px; }
+      .cover-i .stamp { display: none; }
+    }
+
+    /* ─── Brief block ─── */
+    .brief {
+      margin-top: 64px;
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 56px;
+      align-items: start;
+    }
+    @media (max-width: 880px) { .brief { grid-template-columns: 1fr; gap: 24px; } }
+    .brief .lhs h2 {
+      font-family: var(--display); font-weight: 700;
+      font-size: 36px; line-height: 1.1; letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .brief .lhs p { font-size: 15px; line-height: 1.55; color: var(--ink-2); margin: 16px 0 0; }
+    .brief .rhs {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    }
+    .rule {
+      background: var(--paper); border: 1px solid var(--line);
+      border-radius: 14px; padding: 16px 18px;
+    }
+    .rule .num {
+      font-family: var(--display); font-weight: 700; font-size: 14px;
+      color: var(--yellow-fg);
+      background: var(--yellow);
+      width: 24px; height: 24px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+    }
+    .rule h4 { margin: 0 0 4px; font-family: var(--display); font-weight: 600; font-size: 15px; }
+    .rule p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+    /* ─── Section heads ─── */
+    .ssec { margin-top: 88px; }
+    .ssec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+    .ssec-head .num {
+      font-family: var(--display); font-weight: 700; font-size: 14px;
+      background: var(--ink); color: var(--paper);
+      width: 28px; height: 28px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .ssec-head h2 {
+      font-family: var(--display); font-weight: 700; font-size: 32px;
+      line-height: 1.1; letter-spacing: -0.015em; margin: 0;
+    }
+    .ssec-sub {
+      margin: 8px 0 28px 44px; max-width: 60ch;
+      font-size: 14.5px; line-height: 1.55; color: var(--ink-2);
+    }
+
+    /* ─── Sticky-note grid ─── */
+    .ideas {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+    @media (max-width: 980px) {
+      .ideas { grid-template-columns: repeat(6, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .ideas { grid-template-columns: 1fr; gap: 14px; }
+    }
+
+    .idea-c {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px 22px 22px;
+      position: relative;
+      display: flex; flex-direction: column;
+      grid-column: span 6;
+      min-height: 280px;
+    }
+    @media (max-width: 600px) { .idea-c { grid-column: span 1; } }
+
+    /* Modifiers: spans + tints */
+    .idea-c.wide  { grid-column: span 8; }
+    .idea-c.tall  { grid-column: span 4; }
+    .idea-c.full  { grid-column: span 12; }
+    @media (max-width: 980px) {
+      .idea-c.wide, .idea-c.tall, .idea-c.full { grid-column: span 6; }
+    }
+    @media (max-width: 600px) {
+      .idea-c.wide, .idea-c.tall, .idea-c.full { grid-column: span 1; }
+    }
+
+    .idea-c.tinted-pink { background: linear-gradient(180deg, #fef0f7 0%, #fff 60%); }
+    .idea-c.tinted-purple { background: linear-gradient(180deg, #f5edff 0%, #fff 60%); }
+    .idea-c.tinted-yellow { background: linear-gradient(180deg, #fffae0 0%, #fff 60%); }
+    .idea-c.tinted-blue { background: linear-gradient(180deg, #ecf2fc 0%, #fff 60%); }
+    .idea-c.tinted-orange { background: linear-gradient(180deg, #fff1e2 0%, #fff 60%); }
+    .idea-c.tinted-green { background: linear-gradient(180deg, #eef7e1 0%, #fff 60%); }
+
+    /* Stamp / ID */
+    .idea-c .stamp {
+      position: absolute; top: 18px; right: 22px;
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+      font-size: 11px; color: var(--ink-4);
+      letter-spacing: 0.04em;
+    }
+    .idea-c .champ-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--ink-3);
+      margin-bottom: 16px;
+    }
+    .idea-c .champ-tag .av {
+      width: 22px; height: 22px; border-radius: 6px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: var(--display); font-weight: 700; font-size: 10px;
+      color: #fff; letter-spacing: 0;
+    }
+    .idea-c[data-c="writer"]  .champ-tag .av { background: var(--ux-writer); }
+    .idea-c[data-c="ui"]      .champ-tag .av { background: var(--ux-ui); }
+    .idea-c[data-c="service"] .champ-tag .av { background: var(--service); color: #2a1300; }
+    .idea-c[data-c="product"] .champ-tag .av { background: var(--product); }
+    .idea-c[data-c="team"]    .champ-tag .av { background: #1a1810; }
+
+    /* "How might we" question — display type */
+    .hmw {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 1.12;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin: 0 0 16px;
+    }
+    .idea-c.wide .hmw { font-size: 34px; }
+    .idea-c.full .hmw { font-size: 44px; line-height: 1.06; max-width: 22ch; }
+
+    /* Pitch body */
+    .pitch { font-size: 15px; line-height: 1.55; color: var(--ink-2); margin: 0 0 20px; max-width: 56ch; }
+    .pitch b { color: var(--ink); font-weight: 600; }
+
+    /* Pull quote — designer's voice */
+    .voice {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.55);
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .voice .av {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: var(--display); font-weight: 700; font-size: 11px;
+      color: #fff;
+    }
+    .idea-c[data-c="writer"]  .voice .av { background: var(--ux-writer); }
+    .idea-c[data-c="ui"]      .voice .av { background: var(--ux-ui); }
+    .idea-c[data-c="service"] .voice .av { background: var(--service); color: #2a1300; }
+    .idea-c[data-c="product"] .voice .av { background: var(--product); }
+    .idea-c[data-c="team"]    .voice .av { background: #1a1810; }
+    .voice p {
+      margin: 0;
+      font-family: var(--display);
+      font-style: italic; font-weight: 500;
+      font-size: 14px; line-height: 1.45;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .voice .who {
+      font-style: normal; font-weight: 700;
+      font-size: 10.5px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--ink-3);
+      display: block; margin-bottom: 3px;
+    }
+
+    /* Tag chips bottom */
+    .chips {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px dashed var(--line);
+    }
+    .chips .chip {
+      font-size: 11.5px; font-weight: 600;
+      background: var(--canvas); color: var(--ink-2);
+      padding: 4px 10px; border-radius: 999px;
+      letter-spacing: 0.01em;
+    }
+    .chips .chip.fresh { background: #1a1810; color: #fff; }
+    .chips .chip.bold { background: var(--yellow); color: var(--yellow-fg); }
+
+    /* Effort/Impact mini-grid */
+    .ei {
+      display: flex; gap: 14px;
+      font-size: 11.5px; color: var(--ink-3);
+      margin-top: 12px;
+    }
+    .ei .item {
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .ei .item b { color: var(--ink); font-weight: 700; letter-spacing: 0.01em; }
+    .ei .item .bars { display: inline-flex; gap: 2px; margin-left: 2px; }
+    .ei .item .bars i {
+      width: 5px; height: 9px; background: var(--line); border-radius: 1px; display: inline-block;
+    }
+    .ei .item .bars i.on { background: var(--ink); }
+
+    /* Visual headers per card */
+    .vis {
+      height: 84px;
+      margin: -4px -4px 20px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      background: var(--canvas);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .idea-c.tall .vis { height: 64px; }
+
+    /* Promote button */
+    .promote {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12.5px; font-weight: 600;
+      background: transparent; color: var(--ink);
+      border: 1px solid var(--ink); padding: 6px 12px;
+      border-radius: 999px; cursor: pointer;
+      font-family: inherit; transition: background 120ms ease;
+      margin-top: 14px; align-self: flex-start;
+    }
+    .promote:hover { background: var(--ink); color: #fff; }
+
+    /* ─── Wildcard zone ─── */
+    .wildcard {
+      margin-top: 30px;
+      padding: 28px 30px;
+      background:
+        repeating-linear-gradient(45deg, transparent 0 12px, rgba(249,225,13,0.04) 12px 24px),
+        var(--paper);
+      border: 1.5px dashed var(--yellow);
+      border-radius: 22px;
+    }
+    .wildcard .label {
+      font-family: var(--display); font-weight: 700; font-size: 13px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--yellow-fg);
+      background: var(--yellow); display: inline-block;
+      padding: 5px 11px; border-radius: 6px; margin-bottom: 14px;
+    }
+
+    /* ─── Voting / promote bar ─── */
+    .promote-rail {
+      margin-top: 60px;
+      padding: 32px 36px;
+      background: var(--ink); color: #fff;
+      border-radius: 22px;
+    }
+    .promote-rail h3 {
+      margin: 0 0 8px;
+      font-family: var(--display); font-weight: 700; font-size: 26px;
+      letter-spacing: -0.015em; color: #fff;
+    }
+    .promote-rail p { margin: 0; font-size: 14.5px; line-height: 1.55; color: rgba(255,255,255,0.7); max-width: 60ch; }
+    .vote-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      margin-top: 22px;
+    }
+    @media (max-width: 720px) { .vote-grid { grid-template-columns: 1fr; } }
+    .vote {
+      background: rgba(255,255,255,0.08); padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .vote .id-row {
+      display: flex; align-items: center; gap: 8px; font-size: 12px;
+      font-family: ui-monospace, Menlo, monospace; color: rgba(255,255,255,0.6);
+      letter-spacing: 0.05em; margin-bottom: 8px;
+    }
+    .vote .id-row b { color: var(--yellow); }
+    .vote h4 { margin: 0; font-family: var(--display); font-weight: 600; font-size: 16.5px; color: #fff; }
+    .vote .votes {
+      display: flex; gap: 6px; margin-top: 12px;
+    }
+    .vote .votes .pip {
+      width: 16px; height: 16px; border-radius: 5px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: var(--display); font-weight: 700; font-size: 8.5px;
+      color: #fff;
+    }
+    .vote .votes .pip.writer  { background: var(--ux-writer); }
+    .vote .votes .pip.ui      { background: var(--ux-ui); }
+    .vote .votes .pip.service { background: var(--service); color: #2a1300; }
+    .vote .votes .pip.product { background: var(--product); }
+
+    /* Foot */
+    .foot-i {
+      margin-top: 56px;
+      font-size: 12px; color: var(--ink-3);
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--line); padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+
+    <!-- ════════════════════════════ COVER ════════════════════════════ -->
+    <section class="cover-i">
+      <div class="meta">
+        <span class="dot"></span><span>Woba · Sessão de ideação</span>
+        <span style="color:var(--ink-4)">·</span>
+        <span style="color:var(--ink-4)">v0.1 · maio/26</span>
+      </div>
+      <h1 class="h-mega">Antes da<br/>próxima crit.</h1>
+      <p class="lede">
+        Dez ideias que <b>ainda não viraram proposta formal</b>. Saídas de uma sessão de divergência de 90 min do mesmo
+        time, com a regra de ficar fora do território já coberto pelas 19 propostas detalhadas em <code>Propostas.html</code>.
+        Sem fluxograma, sem crit dura — só "<i>how might we?</i>", um pitch e a voz de quem trouxe a ideia.
+      </p>
+      <div class="stamp">
+        <small>Etapa</small>
+        Divergência
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ BRIEF ════════════════════════════ -->
+    <section class="brief">
+      <div class="lhs">
+        <h2>O brief da sessão.</h2>
+        <p>
+          Saímos do espaço de reserva-de-sala para territórios adjacentes: comunidade, jornada nômade,
+          bem-estar, gestão B2B, multi-canal. Cada perfil trouxe 2 ideias. No fim, surgiram 2 wildcards
+          que não vieram de nenhum perfil específico — apareceram na conversa.
+        </p>
+      </div>
+      <div class="rhs">
+        <div class="rule">
+          <div class="num">1</div>
+          <h4>Sair do território coberto.</h4>
+          <p>Nada que repita as 19 propostas existentes. Olhar pra antes, depois, ou ao lado.</p>
+        </div>
+        <div class="rule">
+          <div class="num">2</div>
+          <h4>How might we, não como.</h4>
+          <p>Pergunta como provocação, não solução fechada. Implementação fica pra crit.</p>
+        </div>
+        <div class="rule">
+          <div class="num">3</div>
+          <h4>1 frase de campeão.</h4>
+          <p>Quem trouxe explica em 1 frase só. Se precisa de mais, não tá pronta.</p>
+        </div>
+        <div class="rule">
+          <div class="num">4</div>
+          <h4>Marcar coragem.</h4>
+          <p>Tag <b>fresh</b> = território novo · tag <b>bold</b> = exige re-arquitetar produto.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ IDEIAS ════════════════════════════ -->
+    <section class="ssec">
+      <div class="ssec-head">
+        <span class="num">1</span>
+        <h2>As 8 ideias do time.</h2>
+      </div>
+      <p class="ssec-sub">Cada perfil trouxe 2. Tamanho do card reflete a empolgação geral, não a viabilidade.</p>
+
+      <div class="ideas">
+
+        <!-- I-01 — Hora do café com a Sofia (CAMI · writer) -->
+        <article class="idea-c tinted-pink wide" data-c="writer">
+          <span class="stamp">I-01</span>
+          <div class="vis" style="background: linear-gradient(135deg, #fce4ec 0%, #fff 100%);">
+            <svg width="220" height="60" viewBox="0 0 220 60" fill="none">
+              <rect x="20" y="14" width="140" height="32" rx="5" fill="#fff" stroke="#ec4899" stroke-width="1.5"/>
+              <path d="M30 22 h120 M30 28 h100 M30 34 h120" stroke="#ec4899" stroke-width="1.2" opacity="0.5"/>
+              <circle cx="180" cy="30" r="14" fill="#ec4899"/>
+              <path d="M174 28 q3 -3 6 0 t6 0" stroke="#fff" stroke-width="2" fill="none"/>
+              <circle cx="178" cy="26" r="1" fill="#fff"/>
+              <circle cx="184" cy="26" r="1" fill="#fff"/>
+            </svg>
+          </div>
+          <div class="champ-tag"><span class="av">CN</span>Cami · UX Writer</div>
+          <h3 class="hmw">E se a Sofia escrevesse uma cartinha quinzenal?</h3>
+          <p class="pitch">
+            <b>Hora do café com a Sofia</b>: a cada 2 semanas, uma mensagem curta de "diário do produto" —
+            o que mudou, uma história de usuário, um café cortesia novo, uma curiosidade do coworking favorito.
+            Newsletter conversacional, sem template de marketing. Você até esquece que é o produto te falando.
+          </p>
+          <div class="voice">
+            <span class="av">CN</span>
+            <div>
+              <span class="who">Cami</span>
+              <p>"A maioria dos produtos só conversa quando precisa de algo. Quero ver o oposto."</p>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip fresh">fresh</span>
+            <span class="chip">retenção</span>
+            <span class="chip">tom de voz</span>
+          </div>
+          <div class="ei">
+            <span class="item">Esforço <span class="bars"><i class="on"></i><i></i><i></i></span></span>
+            <span class="item">Impacto <span class="bars"><i class="on"></i><i class="on"></i><i></i></span></span>
+          </div>
+        </article>
+
+        <!-- I-02 — Sofia confessa (CAMI · writer) -->
+        <article class="idea-c tinted-pink tall" data-c="writer">
+          <span class="stamp">I-02</span>
+          <div class="champ-tag"><span class="av">CN</span>Cami · UX Writer</div>
+          <h3 class="hmw">Sofia que assume quando erra.</h3>
+          <p class="pitch">
+            Quando a busca demora, quando o coworking não responde, quando algo deu ruim: Sofia conta
+            <b>em primeira pessoa</b> sem desviar pra "estamos verificando". "Tô demorando porque o Tribbos
+            tá lento agora — não te esqueci."
+          </p>
+          <div class="chips">
+            <span class="chip">transparência</span>
+            <span class="chip">confiança</span>
+          </div>
+        </article>
+
+        <!-- I-03 — Card de "humor" da sala (RAFA · ui) -->
+        <article class="idea-c tinted-purple" data-c="ui">
+          <span class="stamp">I-03</span>
+          <div class="vis" style="background: linear-gradient(135deg, #ede1ff 0%, #fff 100%);">
+            <svg width="200" height="60" viewBox="0 0 200 60">
+              <rect x="20" y="10" width="60" height="40" rx="6" fill="#a768ff"/>
+              <rect x="86" y="10" width="60" height="40" rx="6" fill="#c5a3ff"/>
+              <rect x="152" y="10" width="36" height="40" rx="6" fill="#5d16c2"/>
+              <circle cx="38" cy="20" r="2" fill="#fff"/>
+              <circle cx="46" cy="20" r="2" fill="#fff"/>
+              <circle cx="54" cy="20" r="2" fill="#fff"/>
+              <text x="50" y="40" font-family="Manrope" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">cheia · 3/5</text>
+              <text x="116" y="40" font-family="Manrope" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">média · 2/5</text>
+              <text x="170" y="40" font-family="Manrope" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">vazia</text>
+            </svg>
+          </div>
+          <div class="champ-tag"><span class="av">RL</span>Rafa · UX/UI</div>
+          <h3 class="hmw">"Como tá o vibe da sala agora?"</h3>
+          <p class="pitch">
+            Antes de reservar, mostrar <b>uma faixa horária visual</b> do coworking inteiro: cheio às 14h,
+            esvaziando às 17h, sala silenciosa vs. movimentada. Sinal honesto antes do compromisso.
+            Vai além de "disponível/indisponível".
+          </p>
+          <div class="chips">
+            <span class="chip fresh">fresh</span>
+            <span class="chip">decisão informada</span>
+            <span class="chip">data viz no chat</span>
+          </div>
+          <div class="ei">
+            <span class="item">Esforço <span class="bars"><i class="on"></i><i class="on"></i><i></i></span></span>
+            <span class="item">Impacto <span class="bars"><i class="on"></i><i class="on"></i><i></i></span></span>
+          </div>
+        </article>
+
+        <!-- I-04 — Reservar por voz (RAFA · ui) -->
+        <article class="idea-c tinted-purple" data-c="ui">
+          <span class="stamp">I-04</span>
+          <div class="vis" style="background: linear-gradient(135deg, #ede1ff 0%, #fff 100%);">
+            <svg width="200" height="60" viewBox="0 0 200 60">
+              <circle cx="100" cy="30" r="22" fill="#a768ff"/>
+              <rect x="94" y="20" width="12" height="18" rx="6" fill="#fff"/>
+              <path d="M86 30 q14 12 28 0" stroke="#fff" stroke-width="2" fill="none"/>
+              <circle cx="60" cy="30" r="3" fill="#a768ff" opacity="0.4"/>
+              <circle cx="48" cy="30" r="2" fill="#a768ff" opacity="0.6"/>
+              <circle cx="140" cy="30" r="3" fill="#a768ff" opacity="0.4"/>
+              <circle cx="152" cy="30" r="2" fill="#a768ff" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="champ-tag"><span class="av">RL</span>Rafa · UX/UI</div>
+          <h3 class="hmw">Apertar e falar: "sala pra 4 em Pinheiros amanhã 14h".</h3>
+          <p class="pitch">
+            Microfone no input já existe. Hoje vira áudio bagunçado pro humano. <b>E se Sofia entender mesmo?</b>
+            Sem precisar digitar tudo no celular andando. Conexão direta com a busca da P-00.
+          </p>
+          <div class="voice">
+            <span class="av">RL</span>
+            <div>
+              <span class="who">Rafa</span>
+              <p>"O canal é WhatsApp — áudio é nativo. Não usar isso é deixar fricção em cima da mesa."</p>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip bold">bold</span>
+            <span class="chip">acessibilidade</span>
+            <span class="chip">mobile-first real</span>
+          </div>
+          <div class="ei">
+            <span class="item">Esforço <span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
+            <span class="item">Impacto <span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
+          </div>
+        </article>
+
+        <!-- I-05 — Concierge físico (JÚLIA · service) -->
+        <article class="idea-c tinted-orange wide" data-c="service">
+          <span class="stamp">I-05</span>
+          <div class="vis" style="background: linear-gradient(135deg, #fff1e2 0%, #fff 100%);">
+            <svg width="280" height="60" viewBox="0 0 280 60">
+              <!-- entrada e mapa indoor -->
+              <rect x="20" y="14" width="240" height="32" rx="4" fill="#fff" stroke="#fe8c14" stroke-width="1.5"/>
+              <rect x="32" y="22" width="40" height="16" rx="2" fill="#ffd5a8"/>
+              <text x="52" y="33" font-family="Manrope" font-size="8" fill="#98540c" text-anchor="middle" font-weight="700">entrada</text>
+              <path d="M72 30 L 200 30" stroke="#fe8c14" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <circle cx="200" cy="30" r="6" fill="#fe8c14"/>
+              <text x="200" y="33" font-family="Manrope" font-size="7" fill="#fff" text-anchor="middle" font-weight="800">02</text>
+            </svg>
+          </div>
+          <div class="champ-tag"><span class="av">JO</span>Júlia · Service</div>
+          <h3 class="hmw">E se a recepção te reconhecesse antes de você dizer seu nome?</h3>
+          <p class="pitch">
+            Extensão do P-01: ao fazer check-in, Sofia abre <b>mapa indoor</b> com a rota até a sala
+            ("2º andar, vire à esquerda, sala 02"). Recepção recebe ping de chegada antes do "oi". Cliente
+            chega esperado — não anunciado. É o tipo de cuidado que ele lembra na renovação.
+          </p>
+          <div class="voice">
+            <span class="av">JO</span>
+            <div>
+              <span class="who">Júlia</span>
+              <p>"O check-in proativo cuida do digital. Quem cuida da experiência física do primeiro passo?"</p>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">extensão P-01</span>
+            <span class="chip">experiência física</span>
+            <span class="chip">NPS de renovação</span>
+          </div>
+          <div class="ei">
+            <span class="item">Esforço <span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
+            <span class="item">Impacto <span class="bars"><i class="on"></i><i class="on"></i><i></i></span></span>
+          </div>
+        </article>
+
+        <!-- I-06 — Sofia no Slack/Teams (JÚLIA · service) -->
+        <article class="idea-c tinted-orange tall" data-c="service">
+          <span class="stamp">I-06</span>
+          <div class="champ-tag"><span class="av">JO</span>Júlia · Service</div>
+          <h3 class="hmw">Sofia no Slack, no Teams, no canal de trabalho.</h3>
+          <p class="pitch">
+            <b>Mesma agente, outro canal</b>. Reservar enquanto trabalha sem trocar de app. WhatsApp segue como
+            canal de "fora do trabalho" — Slack vira o canal de "no trabalho". O usuário escolhe.
+          </p>
+          <div class="chips">
+            <span class="chip bold">bold</span>
+            <span class="chip">omni-canal</span>
+            <span class="chip">B2B</span>
+          </div>
+        </article>
+
+        <!-- I-07 — Painel do gestor (DANI · product) -->
+        <article class="idea-c tinted-blue" data-c="product">
+          <span class="stamp">I-07</span>
+          <div class="vis" style="background: linear-gradient(135deg, #ecf2fc 0%, #fff 100%);">
+            <svg width="200" height="60" viewBox="0 0 200 60">
+              <rect x="20" y="14" width="160" height="32" rx="5" fill="#fff" stroke="#343ced" stroke-width="1.5"/>
+              <rect x="28" y="22" width="40" height="16" rx="2" fill="#dbe1ff"/>
+              <rect x="76" y="22" width="20" height="16" rx="2" fill="#343ced" opacity="0.5"/>
+              <rect x="104" y="26" width="20" height="12" rx="2" fill="#343ced" opacity="0.8"/>
+              <rect x="132" y="22" width="40" height="16" rx="2" fill="#343ced"/>
+              <text x="28" y="50" font-family="Manrope" font-size="7" fill="#343ced">seg ter qua qui sex</text>
+            </svg>
+          </div>
+          <div class="champ-tag"><span class="av">DM</span>Dani · Product</div>
+          <h3 class="hmw">Toda segunda, um sumário pro gestor.</h3>
+          <p class="pitch">
+            Para chefes/RH com plano B2B: <b>resumo semanal por WhatsApp</b> — uso do time, top salas,
+            créditos restantes, alertas de "Marina não reservou em 14 dias". Sem precisar abrir dashboard.
+            Sofia é o painel.
+          </p>
+          <div class="chips">
+            <span class="chip">B2B</span>
+            <span class="chip">gestão</span>
+            <span class="chip">retenção corporativa</span>
+          </div>
+          <div class="ei">
+            <span class="item">Esforço <span class="bars"><i class="on"></i><i class="on"></i><i></i></span></span>
+            <span class="item">Impacto <span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
+          </div>
+        </article>
+
+        <!-- I-08 — Calendar 2-way sync (DANI · product) -->
+        <article class="idea-c tinted-blue" data-c="product">
+          <span class="stamp">I-08</span>
+          <div class="vis" style="background: linear-gradient(135deg, #ecf2fc 0%, #fff 100%);">
+            <svg width="200" height="60" viewBox="0 0 200 60">
+              <rect x="40" y="14" width="50" height="32" rx="4" fill="#fff" stroke="#343ced" stroke-width="1.5"/>
+              <text x="65" y="34" font-family="Manrope" font-size="9" fill="#343ced" text-anchor="middle" font-weight="700">Cal</text>
+              <path d="M94 30 L 110 30" stroke="#343ced" stroke-width="1.5" marker-start="url(#aL)" marker-end="url(#aR)"/>
+              <defs>
+                <marker id="aL" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10 0L0 5L10 10z" fill="#343ced"/></marker>
+                <marker id="aR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#343ced"/></marker>
+              </defs>
+              <rect x="114" y="14" width="50" height="32" rx="14" fill="#f9e10d"/>
+              <text x="139" y="33" font-family="Manrope" font-size="10" fill="#1a1810" text-anchor="middle" font-weight="800">woba</text>
+            </svg>
+          </div>
+          <div class="champ-tag"><span class="av">DM</span>Dani · Product</div>
+          <h3 class="hmw">Criou evento no Google? A sala já tá reservada.</h3>
+          <p class="pitch">
+            <b>Sync bidirecional com Google/Outlook</b>. Você cria evento "Reunião — Tribbos sala 02";
+            Sofia detecta e cria a reserva. Cancela no Calendar → cancela na Woba. Nunca mais dupla-entrada.
+            Onde mora o agendamento, mora a reserva.
+          </p>
+          <div class="voice">
+            <span class="av">DM</span>
+            <div>
+              <span class="who">Dani</span>
+              <p>"O Calendar é onde o trabalho mora. Brigar com isso é perder."</p>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">integração</span>
+            <span class="chip">workflow</span>
+          </div>
+          <div class="ei">
+            <span class="item">Esforço <span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
+            <span class="item">Impacto <span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ WILDCARD ════════════════════════════ -->
+    <section class="ssec">
+      <div class="ssec-head">
+        <span class="num">2</span>
+        <h2>Wildcards.</h2>
+      </div>
+      <p class="ssec-sub">Apareceram na conversa, sem dono claro. Mais cruas, mais arriscadas.</p>
+
+      <div class="wildcard">
+        <span class="label">⚡ Wildcard</span>
+
+        <div class="ideas" style="margin-top: 8px">
+          <article class="idea-c tinted-yellow wide" data-c="team" style="border:none; background: transparent;">
+            <span class="stamp">W-01</span>
+            <div class="champ-tag"><span class="av">⚡</span>Saiu da conversa · sem dono</div>
+            <h3 class="hmw">"Você tem 5h de reunião seguida. Bora respirar?"</h3>
+            <p class="pitch">
+              Sofia <b>olha sua agenda do dia</b> e, quando vê maratona de reuniões, sugere um intervalo de 15 min
+              entre elas — bloqueia o slot, oferece café/água no coworking, ou só "fecha o WhatsApp e respira".
+              Não é reserva, é pausa.
+            </p>
+            <div class="chips">
+              <span class="chip fresh">fresh</span>
+              <span class="chip bold">bold</span>
+              <span class="chip">bem-estar</span>
+              <span class="chip">não-comercial</span>
+            </div>
+          </article>
+
+          <article class="idea-c tinted-green tall" data-c="team" style="background: transparent; border: none;">
+            <span class="stamp">W-02</span>
+            <div class="champ-tag"><span class="av">⚡</span>Saiu da conversa · sem dono</div>
+            <h3 class="hmw">Mesa solo, café incluso.</h3>
+            <p class="pitch">
+              Reserva <b>não é só sala de reunião</b>. Mesa individual num coworking pra trabalhar 3h sozinho,
+              com café incluso. Atende o nômade que não tem reunião — só precisa de um lugar bom.
+            </p>
+            <div class="chips">
+              <span class="chip">novo produto</span>
+              <span class="chip">nômade</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ PROMOTE ════════════════════════════ -->
+    <section class="promote-rail">
+      <h3>Quais sobem pra crit?</h3>
+      <p>
+        Votação rápida do time. Verde = promove pra próxima rodada de crit (com fluxograma + esboço).
+        Empate técnico no top-3: <b>I-04</b> (voz), <b>I-05</b> (concierge físico) e <b>I-08</b> (Calendar sync).
+      </p>
+      <div class="vote-grid">
+        <div class="vote">
+          <div class="id-row"><b>I-04</b> · Reservar por voz</div>
+          <h4>"Mobile-first real."</h4>
+          <div class="votes">
+            <span class="pip writer">CN</span>
+            <span class="pip ui">RL</span>
+            <span class="pip service">JO</span>
+            <span class="pip product">DM</span>
+          </div>
+        </div>
+        <div class="vote">
+          <div class="id-row"><b>I-05</b> · Concierge físico</div>
+          <h4>"Diferenciação na renovação."</h4>
+          <div class="votes">
+            <span class="pip writer">CN</span>
+            <span class="pip ui">RL</span>
+            <span class="pip service">JO</span>
+            <span class="pip product">DM</span>
+          </div>
+        </div>
+        <div class="vote">
+          <div class="id-row"><b>I-08</b> · Calendar sync</div>
+          <h4>"Onde mora o trabalho."</h4>
+          <div class="votes">
+            <span class="pip writer">CN</span>
+            <span class="pip ui">RL</span>
+            <span class="pip service">JO</span>
+            <span class="pip product">DM</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot-i">
+      <div>Woba · Sessão de ideação · maio/26</div>
+      <div>10 ideias · 8 do time · 2 wildcards</div>
+    </footer>
+  </main>
+</body>
+</html>

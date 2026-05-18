@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" width="600" height="320">
+  <defs>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a3a5e"></stop>
+      <stop offset="1" stop-color="#0f2742"></stop>
+    </linearGradient>
+    <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c4a3e"></stop>
+      <stop offset="1" stop-color="#1d3329"></stop>
+    </linearGradient>
+  </defs>
+  
+  <rect width="600" height="320" fill="url(#water)"></rect>
+  
+  <path d="M 280 0 L 600 0 L 600 220 L 540 240 L 480 230 L 420 245 L 360 235 L 300 245 L 260 220 L 240 180 L 280 0 Z" fill="url(#land)"></path>
+  <path d="M 0 220 L 100 200 L 180 215 L 240 225 L 240 320 L 0 320 Z" fill="url(#land)"></path>
+
+  
+  <g fill="none" stroke="#7a8fa3" stroke-width="14" stroke-linecap="round">
+    <path d="M 600 100 Q 480 130 380 180 T 60 240"></path>
+  </g>
+  <g fill="none" stroke="#a8b8c8" stroke-width="2.5" stroke-dasharray="8 6">
+    <path d="M 600 100 Q 480 130 380 180 T 60 240"></path>
+  </g>
+
+  
+  <g fill="none" stroke="#5a6d7e" stroke-width="3">
+    <path d="M 320 80 L 280 200"></path>
+    <path d="M 420 100 L 470 240"></path>
+    <path d="M 380 60 L 430 100"></path>
+    <path d="M 510 140 L 540 230"></path>
+  </g>
+
+  
+  <g fill="#3d5a4c" stroke="#2a3f36" stroke-width="1">
+    <rect x="340" y="60" width="40" height="22" rx="2"></rect>
+    <rect x="390" y="55" width="34" height="28" rx="2"></rect>
+    <rect x="370" y="100" width="50" height="32" rx="2"></rect>
+    <rect x="430" y="120" width="28" height="20" rx="2"></rect>
+    <rect x="460" y="80" width="42" height="34" rx="2"></rect>
+  </g>
+
+  
+  <g transform="translate(135, 230)">
+    <rect width="56" height="34" rx="6" fill="#fff" stroke="#1a1a1a" stroke-width="2"></rect>
+    <text x="28" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="17" fill="#1a1a1a">84</text>
+  </g>
+
+  
+  <text x="60" y="246" font-family="Arial, sans-serif" font-weight="700" font-size="11" fill="#cfd9e0" letter-spacing="0.06em">FRONT EXPY</text>
+  <text x="490" y="100" font-family="Arial, sans-serif" font-weight="700" font-size="11" fill="#cfd9e0" letter-spacing="0.06em" transform="rotate(35 490 100)">BAYFRONT EX</text>
+
+  
+  <g transform="translate(310, 130)">
+    <path d="M 0 -10 C -10 -10 -16 -2 -16 6 C -16 18 0 36 0 36 C 0 36 16 18 16 6 C 16 -2 10 -10 0 -10 Z" fill="#e23b35" stroke="#7a1a17" stroke-width="1"></path>
+    <circle cx="0" cy="6" r="6" fill="#fff"></circle>
+  </g>
+  <ellipse cx="310" cy="170" rx="14" ry="3" fill="rgba(0,0,0,0.4)"></ellipse>
+</svg>

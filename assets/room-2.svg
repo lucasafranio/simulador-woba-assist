@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cfd9e3"></stop>
+      <stop offset="1" stop-color="#f1f3f5"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="480" fill="#f4f1e9"></rect>
+  <rect x="0" y="0" width="800" height="60" fill="#fbf8f0"></rect>
+  
+  <rect x="40" y="60" width="380" height="280" fill="url(#sky2)" stroke="#d4d0c2" stroke-width="3"></rect>
+  <g fill="#8aa0b5" opacity="0.75">
+    <rect x="60" y="200" width="50" height="140"></rect>
+    <rect x="120" y="160" width="40" height="180"></rect>
+    <rect x="170" y="190" width="60" height="150"></rect>
+    <rect x="240" y="150" width="50" height="190"></rect>
+    <rect x="300" y="180" width="60" height="160"></rect>
+    <rect x="370" y="200" width="40" height="140"></rect>
+  </g>
+  <g stroke="#d4d0c2" stroke-width="2">
+    <line x1="170" y1="60" x2="170" y2="340"></line>
+    <line x1="290" y1="60" x2="290" y2="340"></line>
+  </g>
+  
+  <rect x="420" y="60" width="380" height="280" fill="#ecead9"></rect>
+  <rect x="500" y="130" width="240" height="150" rx="6" fill="#1a1a18" stroke="#cfcdbc" stroke-width="3"></rect>
+  
+  <g fill="#f6c965">
+    <circle cx="180" cy="30" r="6"></circle>
+    <circle cx="280" cy="30" r="6"></circle>
+    <circle cx="380" cy="30" r="6"></circle>
+    <circle cx="480" cy="30" r="6"></circle>
+    <circle cx="580" cy="30" r="6"></circle>
+    <circle cx="680" cy="30" r="6"></circle>
+  </g>
+  
+  <rect x="0" y="340" width="800" height="140" fill="#d8d2bd"></rect>
+  
+  <polygon points="80,340 720,340 760,440 40,440" fill="#fbf9f0" stroke="#d6d0bf" stroke-width="2"></polygon>
+  
+  <g fill="#a8a08c">
+    <rect x="160" y="270" width="56" height="110" rx="8"></rect>
+    <rect x="270" y="270" width="56" height="110" rx="8"></rect>
+    <rect x="380" y="270" width="56" height="110" rx="8"></rect>
+    <rect x="490" y="270" width="56" height="110" rx="8"></rect>
+    <rect x="600" y="270" width="56" height="110" rx="8"></rect>
+  </g>
+  
+  <g>
+    <rect x="700" y="290" width="40" height="50" fill="#d6c69a"></rect>
+    <ellipse cx="720" cy="280" rx="30" ry="22" fill="#3f7a3a"></ellipse>
+    <ellipse cx="700" cy="270" rx="14" ry="20" fill="#4f8f48"></ellipse>
+    <ellipse cx="740" cy="270" rx="14" ry="20" fill="#4f8f48"></ellipse>
+  </g>
+</svg>
