@@ -428,6 +428,11 @@ function App() {
 
   const activeScenario = SCENARIOS.find(s => s.id === activeScenarioId);
   const platformScenarios = SCENARIOS.filter(s => (s.platform || 'whatsapp') === platform);
+  const [scenarioInfoOpen, setScenarioInfoOpen] = useState(false);
+
+  useEffect(() => {
+    setScenarioInfoOpen(false);
+  }, [activeScenarioId]);
 
   /* ─── WhatsApp message renderer ─── */
   const renderWAMsg = (m) => {
@@ -610,6 +615,11 @@ function App() {
 
       {/* Scenario trigger + drawer */}
       <ScenarioTrigger count={platformScenarios.length} onClick={() => setSidebarOpen(true)} platform={platform}/>
+      <ScenarioInfoTrigger
+        scenario={activeScenario}
+        platform={platform}
+        onClick={() => setScenarioInfoOpen(true)}
+      />
       <ScenarioSidebar
         open={sidebarOpen}
         scenarios={SCENARIOS}
@@ -622,6 +632,12 @@ function App() {
         onReset={() => { reset(); setSidebarOpen(false); }}
         autoplay={t.autoplay !== false}
         onAutoplayChange={v => setTweak('autoplay', v)}
+      />
+      <ScenarioInfoPanel
+        open={scenarioInfoOpen}
+        scenario={activeScenario}
+        platform={platform}
+        onClose={() => setScenarioInfoOpen(false)}
       />
 
       {/* Manual-mode advance button — only for non-interactive steps */}
@@ -791,6 +807,200 @@ function InputBar({ value, onChange, onSend }) {
       </button>
     </div>
   );
+}
+
+function ScenarioInfoTrigger({ scenario, platform = 'whatsapp', onClick }) {
+  if (!scenario) return null;
+
+  const isSlack = platform === 'slack';
+  return (
+    <button onClick={onClick} style={{
+      position: 'fixed', right: 16, bottom: 16,
+      zIndex: 50,
+      background: '#fff', color: '#1a1810',
+      border: '1px solid rgba(0,0,0,0.1)', borderRadius: 999,
+      padding: '11px 16px',
+      fontFamily: 'var(--font-ui)', fontSize: 13.5, fontWeight: 600,
+      cursor: 'pointer',
+      display: 'inline-flex', alignItems: 'center', gap: 9,
+      boxShadow: '0 10px 24px rgba(0,0,0,0.18)',
+    }}>
+      <span style={{
+        width: 18, height: 18, borderRadius: '50%',
+        background: isSlack ? '#4a154b' : '#111827',
+        color: '#fff',
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 11, fontWeight: 800,
+        flexShrink: 0,
+      }}>i</span>
+      Info do cenário
+      <span style={{
+        background: '#f3f4f6',
+        color: '#374151',
+        fontSize: 11, fontWeight: 700,
+        padding: '2px 7px', borderRadius: 999,
+        letterSpacing: '0.02em',
+      }}>{scenario.p}</span>
+    </button>
+  );
+}
+
+function ScenarioInfoPanel({ open, scenario, platform = 'whatsapp', onClose }) {
+  if (!scenario) return null;
+
+  const spec = buildScenarioSpec(scenario, platform);
+
+  return (
+    <>
+      <div onClick={onClose} style={{
+        position: 'fixed', inset: 0,
+        background: open ? 'rgba(0,0,0,0.52)' : 'rgba(0,0,0,0)',
+        pointerEvents: open ? 'auto' : 'none',
+        transition: 'background 220ms ease',
+        zIndex: 110,
+      }}/>
+      <aside style={{
+        position: 'fixed', top: 16, right: 16, bottom: 16,
+        width: 420, maxWidth: 'calc(100vw - 32px)',
+        zIndex: 111,
+        background: '#fffdf8',
+        color: '#1f2937',
+        borderRadius: 18,
+        boxShadow: '0 32px 80px rgba(0,0,0,0.35)',
+        transform: open ? 'translateX(0)' : 'translateX(calc(100% + 24px))',
+        transition: 'transform 240ms cubic-bezier(0.2, 0, 0, 1)',
+        display: 'flex', flexDirection: 'column',
+        overflow: 'hidden',
+        fontFamily: 'var(--font-ui)',
+      }}>
+        <div style={{
+          padding: '18px 18px 14px',
+          borderBottom: '1px solid #ece7dc',
+          background: 'linear-gradient(180deg, rgba(249,225,13,0.12), rgba(249,225,13,0))',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+            <div style={{
+              width: 12, height: 12, borderRadius: '50%',
+              background: scenario.color || '#111827',
+              marginTop: 6, flexShrink: 0,
+            }}/>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{
+                  fontFamily: 'ui-monospace, Menlo, monospace',
+                  fontSize: 11, color: '#6b7280', letterSpacing: '0.04em',
+                }}>{scenario.p}</span>
+                <span style={{
+                  fontSize: 11, fontWeight: 700, color: '#374151',
+                  background: '#f3f4f6', padding: '3px 8px', borderRadius: 999,
+                }}>{spec.platformLabel}</span>
+                <span style={{
+                  fontSize: 11, fontWeight: 700, color: '#6b7280',
+                  background: '#f9fafb', padding: '3px 8px', borderRadius: 999,
+                }}>{scenario.category}</span>
+              </div>
+              <div style={{
+                marginTop: 8,
+                fontFamily: 'var(--font-display)',
+                fontSize: 24, lineHeight: 1.05, fontWeight: 700, letterSpacing: '-0.03em',
+                color: '#111827',
+              }}>{scenario.title}</div>
+              <div style={{
+                marginTop: 8, fontSize: 13.5, lineHeight: 1.5, color: '#4b5563',
+              }}>{scenario.summary}</div>
+            </div>
+            <button onClick={onClose} style={{
+              background: 'transparent', border: 0, color: '#6b7280',
+              cursor: 'pointer', width: 28, height: 28, borderRadius: 8,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M5 5l14 14M19 5L5 19"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: 18 }}>
+          <InfoSection title="Finalidade" text={spec.purpose}/>
+          <InfoSection title="Quando usar" text={spec.whenToUse}/>
+          <InfoSection title="Gatilho" text={spec.trigger}/>
+          <InfoSection title="Como funciona" text={spec.flow}/>
+          <InfoSection title="Dados e contexto" text={spec.inputs}/>
+          <InfoSection title="Resultado esperado" text={spec.outcome}/>
+          <InfoSection title="Critério de sucesso" text={spec.success}/>
+        </div>
+      </aside>
+    </>
+  );
+}
+
+function InfoSection({ title, text }) {
+  return (
+    <section style={{ marginBottom: 18 }}>
+      <div style={{
+        fontSize: 11, fontWeight: 800, letterSpacing: '0.08em',
+        textTransform: 'uppercase', color: '#6b7280', marginBottom: 7,
+      }}>{title}</div>
+      <div style={{
+        fontSize: 13.5, lineHeight: 1.6, color: '#1f2937',
+      }}>{text}</div>
+    </section>
+  );
+}
+
+function buildScenarioSpec(scenario, platform) {
+  const firstUser = scenario.steps.find(step => step.kind === 'user');
+  const firstBot = scenario.steps.find(step => step.kind === 'bot');
+  const hasForm = scenario.steps.some(step => step.kind === 'open-sheet');
+  const hasChoice = scenario.steps.some(step => step.kind === 'quick-replies');
+  const hasReservationAsset = scenario.steps.some(step => ['room', 'pill-room', 'carousel'].includes(step.kind));
+  const hasConfirmation = scenario.steps.some(step => ['flow-submitted', 'app-screen', 'rsvp-card', 'ticket-card'].includes(step.kind));
+
+  const flowParts = [];
+  if (firstBot) flowParts.push('inicia com uma mensagem contextual da Sofia');
+  if (hasReservationAsset) flowParts.push('apresenta a opção principal de ação ou reserva');
+  if (hasChoice) flowParts.push('reduz a decisão com atalhos de resposta rápida');
+  if (hasForm) flowParts.push('coleta ou confirma dados em uma camada transacional');
+  if (hasConfirmation) flowParts.push('encerra com confirmação visível do próximo estado');
+
+  const contextParts = [];
+  if (scenario.startTime) contextParts.push(`janela sugerida de execução às ${fmt(scenario.startTime.h, scenario.startTime.m)}`);
+  if (firstUser?.text) contextParts.push(`entrada representativa do usuário: "${sanitizeScenarioText(firstUser.text)}"`);
+  if (scenario.summary) contextParts.push(`promessa central: ${scenario.summary}`);
+
+  return {
+    platformLabel: platform === 'slack' ? 'Slack' : 'WhatsApp',
+    purpose: `Este cenário existe para demonstrar ${normalizeScenarioLead(scenario.summary)}. Ele comunica qual proposta de produto a Woba Assist entrega nesse momento da jornada e como a conversa reduz atrito para o usuário.`,
+    whenToUse: `Use este fluxo quando o contexto do usuário combinar com ${scenario.category.toLowerCase()} e a intenção principal for "${scenario.title}". A ideia aqui não é abrir uma conversa genérica, e sim conduzir uma tarefa específica com o mínimo de fricção.`,
+    trigger: firstUser
+      ? `O cenário pode ser disparado a partir de uma fala do usuário ou de um evento contextual equivalente. No protótipo, a referência mais próxima é "${sanitizeScenarioText(firstUser.text)}".`
+      : `O cenário é disparado por contexto proativo do assistente, sem depender de um pedido livre do usuário naquele momento.`,
+    flow: flowParts.length
+      ? `O fluxo ${flowParts.join(', ')}. Em termos de PRD, isso representa a sequência ideal entre descoberta do contexto, proposta de ação e fechamento com evidência de sucesso.`
+      : `O fluxo foi desenhado para sair de contexto inicial e chegar a um desfecho claro, mantendo a conversa curta e orientada à decisão.`,
+    inputs: contextParts.length
+      ? `Para funcionar bem, este cenário depende de ${contextParts.join('; ')}. Em produção, isso normalmente viria de agenda, reserva ativa, disponibilidade de sala, status operacional ou ações anteriores do usuário.`
+      : `Para funcionar bem, este cenário depende de contexto operacional suficiente para personalizar a mensagem, decidir a melhor próxima ação e evitar perguntas desnecessárias.`,
+    outcome: hasConfirmation
+      ? `O resultado esperado é que o usuário veja um estado final inequívoco no próprio canal, como confirmação, painel de status, resumo de envio ou conclusão de etapa.`
+      : `O resultado esperado é que o usuário entenda a proposta, tome uma decisão e siga para a próxima etapa sem precisar sair do fluxo atual.`,
+    success: `Consideramos este cenário bem-sucedido quando o usuário entende a proposta sem ambiguidade, conclui a ação principal em poucos passos e termina a interação com clareza sobre o que aconteceu depois. ${firstBot ? `A primeira mensagem precisa deixar isso evidente desde o início.` : ''}`,
+  };
+}
+
+function normalizeScenarioLead(summary) {
+  const clean = sanitizeScenarioText(summary || '').replace(/\.$/, '');
+  if (!clean) return 'uma proposta contextual de assistência';
+  return clean.charAt(0).toLowerCase() + clean.slice(1);
+}
+
+function sanitizeScenarioText(text) {
+  return String(text || '')
+    .replace(/^\[|\]$/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 const iconButton = {
