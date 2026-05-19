@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>PRD — Rotinas · Sofia Woba Assist</title>
+  <link rel="stylesheet" href="styles/propostas.css"/>
+  <style>
+    /* ── Status badge ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11.5px; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; padding: 5px 12px; border-radius: 999px;
+    }
+    .badge.draft    { background: #fff3e7; color: #98540c; border: 1px solid #f4b470; }
+    .badge.ready    { background: #e9f3d6; color: #3a6514; border: 1px solid #90c44a; }
+    .badge.ideation { background: #ede1ff; color: #5d16c2; border: 1px solid #a768ff; }
+    .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    /* ── Scenario map header ── */
+    .scenario-map {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 860px) { .scenario-map { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .scenario-map { grid-template-columns: 1fr; } }
+
+    .smap-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 20px;
+      position: relative;
+    }
+    .smap-card .sid {
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+      color: var(--ink-4); margin-bottom: 10px; display: block;
+    }
+    .smap-card h4 { margin: 0 0 6px; font-family: var(--display); font-size: 15px; font-weight: 700; }
+    .smap-card p  { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+    .smap-card .badge { position: absolute; top: 16px; right: 16px; }
+
+    /* ── Horizon table ── */
+    .horizon {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .horizon table {
+      width: 100%; border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    .horizon th {
+      background: var(--canvas); font-family: var(--display);
+      font-weight: 700; font-size: 11px; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--ink-3);
+      padding: 10px 18px; text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+    .horizon td {
+      padding: 11px 18px; border-bottom: 1px solid var(--line);
+      color: var(--ink-2); vertical-align: top; line-height: 1.45;
+    }
+    .horizon tr:last-child td { border-bottom: none; }
+    .horizon td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+    .horizon td .pill {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 999px; margin-right: 4px;
+    }
+    .pill-now    { background: #e9f3d6; color: #3a6514; }
+    .pill-next   { background: #fff3e7; color: #98540c; }
+    .pill-future { background: #ede1ff; color: #5d16c2; }
+
+    /* ── Infra deps box ── */
+    .deps {
+      margin-top: 16px;
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .deps h5 {
+      margin: 0 0 10px;
+      font-family: var(--display); font-weight: 700; font-size: 13px;
+      letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3);
+    }
+    .deps ul { margin: 0; padding-left: 20px; }
+    .deps li { font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+    .deps li b { color: var(--ink); }
+
+    /* ── Metrics strip ── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+    @media (max-width: 720px) { .metrics { grid-template-columns: 1fr 1fr; } }
+    .metric {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .metric .label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px;
+    }
+    .metric .value {
+      font-family: var(--display); font-weight: 800;
+      font-size: 28px; letter-spacing: -0.03em; color: var(--ink);
+      line-height: 1;
+    }
+    .metric .desc { font-size: 12px; color: var(--ink-3); margin-top: 6px; line-height: 1.4; }
+
+    /* ── Open questions ── */
+    .oq-list { margin-top: 16px; }
+    .oq {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    .oq .num {
+      font-family: var(--display); font-weight: 700; font-size: 13px;
+      background: var(--yellow); color: var(--yellow-fg);
+      width: 26px; height: 26px; border-radius: 7px;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .oq p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+    .oq p b { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <main class="page">
+
+    <!-- ════════════════════════════ COVER ════════════════════════════ -->
+    <section class="cover">
+      <div class="cover-meta">
+        <span class="dot"></span><span>Woba · PRD de Produto</span>
+        <span style="color:var(--ink-4);font-weight:500">·</span>
+        <span style="color:var(--ink-4);font-weight:500">v0.1 · maio/26</span>
+      </div>
+      <h1 class="h-mega">Sofia aprende<br/>sua rotina.</h1>
+      <p class="lede">
+        Seis cenários que transformam a Sofia de <b>assistente reativa</b> em uma agente que reconhece padrões,
+        antecipa necessidades e torna a reserva recorrente <b>invisível</b> — zero fricção pra quem vai toda
+        semana ao mesmo lugar. Mapeamento completo da funcionalidade de <b>Rotinas</b>: conceito, fluxo,
+        copy, integrações e métricas.
+      </p>
+      <div class="cover-side">
+        PRD<br/>
+        Sofia · Rotinas<br/>
+        6 cenários
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ CONTEXTO ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">1</span>
+        <h2 class="h-2">Por que Rotinas?</h2>
+      </div>
+      <p class="body" style="max-width:66ch;margin-top:-10px;margin-bottom:28px">
+        O usuário recorrente — aquele que reserva toda terça às 10h no mesmo coworking — é o perfil de maior
+        valor da Woba: menor custo de aquisição, maior LTV, maior NPS. Hoje ele passa pelo mesmo friccionamento
+        de uma primeira reserva <b>toda semana</b>. Rotinas fecha essa lacuna.
+      </p>
+
+      <div class="team-grid" style="margin-bottom:28px">
+        <div class="persona" data-role="writer">
+          <div class="avatar" style="font-size:18px">🔁</div>
+          <div class="role">Problema central</div>
+          <h3 class="name">Reserva recorrente com fricção de primeira vez.</h3>
+          <p class="focus">Usuário que vai toda semana ao mesmo lugar passa pelo mesmo fluxo de busca, escolha e confirmação como se fosse estreia.</p>
+        </div>
+        <div class="persona" data-role="ui">
+          <div class="avatar" style="font-size:18px">📉</div>
+          <div class="role">Risco de negócio</div>
+          <h3 class="name">Churn silencioso nos recorrentes.</h3>
+          <p class="focus">Quando um concorrente oferecer "reserva com 1 toque", o usuário habitual troca sem cerimônia — não tem relação com a sala, tem com o hábito.</p>
+        </div>
+        <div class="persona" data-role="service">
+          <div class="avatar" style="font-size:18px">🧠</div>
+          <div class="role">Oportunidade</div>
+          <h3 class="name">Sofia já tem os dados. Falta usá-los.</h3>
+          <p class="focus">Histórico de reservas existe. Pattern matching simples (mesma sala + mesmo dia + mesmo horário × 3) resolve 80% dos casos sem ML avançado.</p>
+        </div>
+        <div class="persona" data-role="product">
+          <div class="avatar" style="font-size:18px">🎯</div>
+          <div class="role">Tese do produto</div>
+          <h3 class="name">Rotina travada = retenção semanal sem campanha.</h3>
+          <p class="focus">Usuário com recorrência ativa cancela com intenção — não por esquecimento ou atrito. Engajamento se vira receita recorrente previsível.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ MAPA DE CENÁRIOS ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">2</span>
+        <h2 class="h-2">Os 6 cenários</h2>
+      </div>
+      <p class="body" style="max-width:66ch;margin-top:-10px;margin-bottom:0">
+        Rotinas não é uma feature isolada — é um conjunto de comportamentos que se reforçam. Os três cenários
+        do núcleo já têm proposta aprovada; os três da camada avançada vêm da sessão de ideação e precisam de crit.
+      </p>
+
+      <div class="scenario-map">
+        <div class="smap-card">
+          <span class="badge ready"><span class="dot"></span>Pronto pra crit</span>
+          <span class="sid">P-03</span>
+          <h4>Recorrência inteligente</h4>
+          <p>Detecta padrão após 3 reservas, oferece travar a série. Flow de 2 perguntas com defaults bons.</p>
+        </div>
+        <div class="smap-card">
+          <span class="badge ready"><span class="dot"></span>Pronto pra crit</span>
+          <span class="sid">P-12</span>
+          <h4>Re-engagement personalizado</h4>
+          <p>7 dias sem reserva → sugestão baseada no histórico. Inclui saída de respeito ("tô fora essa semana").</p>
+        </div>
+        <div class="smap-card">
+          <span class="badge ready"><span class="dot"></span>Pronto pra crit</span>
+          <span class="sid">P-13</span>
+          <h4>Reservar de novo</h4>
+          <p>Saudação oferece as 3 últimas reservas como atalho — Flow já preenchido, 1 toque.</p>
+        </div>
+        <div class="smap-card">
+          <span class="badge draft"><span class="dot"></span>Em ideação</span>
+          <span class="sid">I-07</span>
+          <h4>Sumário semanal do gestor</h4>
+          <p>Toda segunda: uso do time, créditos, alertas de inatividade. Sofia como painel B2B via WhatsApp.</p>
+        </div>
+        <div class="smap-card">
+          <span class="badge draft"><span class="dot"></span>Em ideação</span>
+          <span class="sid">I-08</span>
+          <h4>Calendar sync bidirecional</h4>
+          <p>Criou evento no Google Calendar → Sofia cria a reserva. Cancela lá → cancela aqui. Zero dupla-entrada.</p>
+        </div>
+        <div class="smap-card">
+          <span class="badge ideation"><span class="dot"></span>Wildcard</span>
+          <span class="sid">W-01</span>
+          <h4>Agenda ciente de bem-estar</h4>
+          <p>5h seguidas de reunião → Sofia sugere pausa de 15 min, bloqueia slot, oferece café ou simplesmente "respira".</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ PROPOSTAS ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">3</span>
+        <h2 class="h-2">As propostas detalhadas</h2>
+      </div>
+
+      <!-- ─────────── P-03 — RECORRÊNCIA INTELIGENTE ─────────── -->
+      <article class="proposal">
+        <header class="proposal-head">
+          <div class="left">
+            <span class="stage"><span class="stage-dot"></span>Padrão de uso · após 3 reservas</span>
+            <h3 class="h-1 title">Sofia percebe sua rotina.</h3>
+            <p class="sub">
+              Depois da 3ª reserva no mesmo coworking, dia e horário, Sofia detecta o padrão e oferece transformar
+              em recorrência. O usuário confirma uma vez; ela cuida do resto e avisa em cada ocorrência.
+              Proposta <b>consenso do time</b> — 4 verdes.
+            </p>
+          </div>
+          <span class="id">P-03 · recorrência</span>
+        </header>
+
+        <div class="blocks">
+
+          <!-- COPY -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v3H4zM4 10h10v3H4zM4 16h13v3H4z"/></svg></span>
+              Copy
+            </div>
+            <div class="copy-list">
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · padrão detectado · véspera 17h</div>
+                <div class="txt">Reparei que você reserva a <b>sala 02 do Tribbos</b> toda <b>terça às 10h</b>.
+
+Quer que eu já deixe travada toda semana? Você cancela quando quiser.</div>
+                <div class="note">Tom de "amiga que percebe", não vendedor. Trigger na véspera da 3ª reserva quando padrão ≥ 3 ocorrências idênticas (mesma sala + mesmo dia da semana + mesmo horário ±30 min).</div>
+              </div>
+              <div class="copy-item" data-who="user">
+                <div class="who">Usuário</div>
+                <div class="txt">Sim, boa ideia</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · Flow leve (2 perguntas)</div>
+                <div class="txt"><b>Reserva recorrente</b>
+🗓️ Terças, 10:00–12:00
+🏢 Tribbos · sala 02
+🔁 Até quando? <i>(Semanalmente / Quinzenalmente / Mensalmente / Dias úteis)</i>
+🔔 Aviso na véspera? <i>(Sim ● / Não)</i></div>
+                <div class="note">Sheet de 2 perguntas. Default: Semanalmente + Sim (aviso ativo). Preview das próximas 4 datas com sinalizador de indisponibilidade se alguma slot já estiver ocupado.</div>
+              </div>
+              <div class="copy-item" data-who="user">
+                <div class="who">Usuário · confirma</div>
+                <div class="txt">[ toca em "Confirmar 4 reservas" ]</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · confirmação da série</div>
+                <div class="txt">Pronto! Sua mesa fixa de terça está garantida pelas próximas <b>12 semanas</b> 🎯
+
+Toda segunda às 17h te lembro. Se algum dia não rolar, é só me dizer.</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · aviso semanal (loop)</div>
+                <div class="txt">Amanhã 10h, sala 02 no Tribbos como sempre 👋
+Confirma que vai? <i>[ Vou ]  [ Cancelar essa ]  [ Pausar série ]</i></div>
+                <div class="note">"Cancelar essa" remove apenas 1 ocorrência. "Pausar série" suspende por N semanas sem destruir a série. Encerrar série definitiva via "Encerrar rotina" no menu ou comando natural no chat.</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · data indisponível na série</div>
+                <div class="txt">⚠️ A <b>sala 02 do Tribbos</b> está ocupada na terça <b>10/06</b>.
+
+Quer que eu busque uma substituta equivalente ou pulo essa semana?</div>
+                <div class="note">Conecta com P-07 (sala substituta automática). Avisa com pelo menos 48h de antecedência.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FLOW -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7l3 9M16 7l-3 9"/></svg></span>
+              Fluxograma
+            </div>
+            <div class="flow-wrap">
+              <svg viewBox="0 0 380 480" xmlns="http://www.w3.org/2000/svg" aria-label="Fluxo recorrência inteligente">
+                <defs>
+                  <marker id="ar-p03" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                    <path d="M0 0L10 5L0 10z" fill="#3e3e37"/>
+                  </marker>
+                  <style>
+                    .p3 { fill: #fff; stroke: #2f2e29; stroke-width: 1.4; }
+                    .p3-sys { fill: #ede1ff; stroke: #5d16c2; }
+                    .p3-bot { fill: #fef9cf; stroke: #988908; }
+                    .p3-usr { fill: #cde7aa; stroke: #4d761a; }
+                    .p3-loop { fill: #fff3e7; stroke: #98540c; stroke-dasharray: 4 3; }
+                    .p3-dec { fill: #ebf2fa; stroke: #234d7c; }
+                    .t3 { font-family: 'Manrope', system-ui; font-size: 11px; fill: #1a1810; font-weight: 600; }
+                    .t3s { font-family: 'Manrope', system-ui; font-size: 9.5px; fill: #4e4d45; }
+                    .l3 { stroke: #3e3e37; stroke-width: 1.4; fill: none; }
+                    .lbl3 { font-family: 'Manrope', system-ui; font-size: 9.5px; fill: #71716a; font-weight: 600; }
+                  </style>
+                </defs>
+
+                <!-- engine detects pattern -->
+                <rect class="p3 p3-sys" x="60" y="12" width="260" height="36" rx="8"/>
+                <text class="t3" x="190" y="30" text-anchor="middle">Motor de padrões · 3ª reserva idêntica</text>
+                <text class="t3s" x="190" y="42" text-anchor="middle">mesma sala · mesmo dia da semana · mesmo horário ±30 min</text>
+
+                <line class="l3" x1="190" y1="48" x2="190" y2="64" marker-end="url(#ar-p03)"/>
+
+                <!-- Sofia asks -->
+                <rect class="p3 p3-bot" x="80" y="68" width="220" height="36" rx="8"/>
+                <text class="t3" x="190" y="86" text-anchor="middle">"Quer travar toda semana?"</text>
+                <text class="t3s" x="190" y="98" text-anchor="middle">véspera 17h · pull, não push</text>
+
+                <line class="l3" x1="190" y1="104" x2="190" y2="120" marker-end="url(#ar-p03)"/>
+
+                <!-- decision: user accepts? -->
+                <polygon class="p3 p3-dec" points="190,124 272,148 190,172 108,148"/>
+                <text class="t3" x="190" y="146" text-anchor="middle">Aceita?</text>
+                <text class="t3s" x="190" y="158" text-anchor="middle"></text>
+
+                <line class="l3" x1="108" y1="148" x2="58" y2="148" marker-end="url(#ar-p03)"/>
+                <text class="lbl3" x="83" y="140" text-anchor="middle">não</text>
+                <rect class="p3" x="4" y="132" width="54" height="32" rx="8"/>
+                <text class="t3s" x="31" y="148" text-anchor="middle">Encerra</text>
+                <text class="t3s" x="31" y="160" text-anchor="middle">silencioso</text>
+
+                <line class="l3" x1="272" y1="148" x2="316" y2="148" marker-end="url(#ar-p03)"/>
+                <text class="lbl3" x="294" y="140" text-anchor="middle">não agora</text>
+                <rect class="p3" x="316" y="132" width="62" height="32" rx="8"/>
+                <text class="t3s" x="347" y="148" text-anchor="middle">Re-pergunta</text>
+                <text class="t3s" x="347" y="160" text-anchor="middle">em 2 sem.</text>
+
+                <line class="l3" x1="190" y1="172" x2="190" y2="188" marker-end="url(#ar-p03)"/>
+
+                <!-- flow sheet 2 questions -->
+                <rect class="p3 p3-bot" x="60" y="192" width="260" height="44" rx="8"/>
+                <text class="t3" x="190" y="211" text-anchor="middle">Flow leve · 2 perguntas</text>
+                <text class="t3s" x="190" y="224" text-anchor="middle">Frequência · Aviso véspera · Preview 4 datas</text>
+
+                <line class="l3" x1="190" y1="236" x2="190" y2="252" marker-end="url(#ar-p03)"/>
+
+                <!-- system creates series -->
+                <rect class="p3 p3-sys" x="60" y="256" width="260" height="36" rx="8"/>
+                <text class="t3" x="190" y="274" text-anchor="middle">Cria série de reservas + cron de aviso</text>
+                <text class="t3s" x="190" y="286" text-anchor="middle">serie_id único · N ocorrências pre-criadas</text>
+
+                <line class="l3" x1="190" y1="292" x2="190" y2="308" marker-end="url(#ar-p03)"/>
+
+                <!-- weekly loop -->
+                <rect class="p3 p3-loop" x="30" y="312" width="320" height="88" rx="10"/>
+                <text class="t3" x="190" y="333" text-anchor="middle">Loop semanal · véspera 17h</text>
+                <text class="t3s" x="190" y="347" text-anchor="middle">"Amanhã, como sempre 👋"</text>
+                <text class="t3s" x="190" y="361" text-anchor="middle">[ Vou ] mantém · [ Cancelar essa ] remove 1 · [ Pausar ] suspende</text>
+                <text class="t3s" x="190" y="377" text-anchor="middle" style="font-style:italic">Slot indisponível → conecta P-07 (substituta) · aviso 48h antes</text>
+                <text class="t3s" x="190" y="391" text-anchor="middle">Encerrar série a qualquer momento via chat natural</text>
+
+                <line class="l3" x1="190" y1="400" x2="190" y2="416" marker-end="url(#ar-p03)"/>
+                <rect class="p3 p3-usr" x="100" y="420" width="180" height="32" rx="8"/>
+                <text class="t3" x="190" y="440" text-anchor="middle">Série encerrada · dados retidos</text>
+              </svg>
+              <div class="flow-legend">
+                <span class="key"><span class="swatch" style="background:#ede1ff;border:1px solid #5d16c2"></span>Inteligência / Sistema</span>
+                <span class="key"><span class="swatch" style="background:#fef9cf;border:1px solid #988908"></span>Sofia</span>
+                <span class="key"><span class="swatch" style="background:#cde7aa;border:1px solid #4d761a"></span>Usuário</span>
+                <span class="key"><span class="swatch" style="background:#fff3e7;border:1px dashed #98540c"></span>Loop semanal</span>
+                <span class="key"><span class="swatch" style="background:#ebf2fa;border:1px solid #234d7c"></span>Decisão</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SKETCH -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="3" width="12" height="18" rx="2"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg></span>
+              Esboço no simulador
+            </div>
+            <div class="sketch">
+              <div class="mini-phone">
+                <div class="mini-status"><span>17:00</span><span>● ⚡</span></div>
+                <div class="mini-header">
+                  <div class="av">woba</div>
+                  <div>
+                    <div class="nm">Woba Staging</div>
+                    <div class="sub">Sofia · Woba Assist</div>
+                  </div>
+                </div>
+                <div class="mini-stream">
+                  <div class="mini-divider">segunda-feira</div>
+                  <div class="mini-bub">Reparei que você reserva a <b>sala 02 do Tribbos</b> toda <b>terça às 10h</b>.
+
+Quer que eu já deixe travada toda semana?<span class="t">17:00</span></div>
+                  <div class="mini-quick">
+                    <span class="chip">Sim, boa ideia</span>
+                    <span class="chip">Hmm, agora não</span>
+                  </div>
+                  <div class="mini-bub user">Sim, boa ideia<span class="t">17:01 <span class="ck">✓✓</span></span></div>
+                  <div class="mini-sheet" style="margin-top:6px">
+                    <div class="handle"></div>
+                    <div class="hd"><span>Reserva recorrente</span><span style="color:var(--chat-text-3)">×</span></div>
+                    <div style="font-size:10px;color:var(--chat-text-2);margin-bottom:4px">Terças · 10:00–12:00 · Tribbos sala 02</div>
+                    <div class="row">🔁 Frequência <b style="float:right">Semanalmente ▾</b></div>
+                    <div class="row">🔔 Aviso véspera? <b style="float:right">Sim ●</b></div>
+                    <div class="cta">Confirmar 4 reservas</div>
+                  </div>
+                  <div class="mini-bub" style="margin-top:8px">Pronto! Sua mesa fixa de terça está garantida 🎯
+
+Toda segunda às 17h te lembro.<span class="t">17:03</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CRIT -->
+        <div class="crit">
+          <div class="crit-head">
+            <h4 class="h-3">Verdicto do time</h4>
+            <span class="muted body-sm">4 verdes · proposta consenso</span>
+          </div>
+          <div class="crit-grid">
+            <div class="crit-card" data-verdict="yes" data-role="writer">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Cami</b> · UX Writer</span></div>
+              <p class="quote">"'Reparei que você...' é íntimo sem ser invasivo. Tom é o ouro dessa proposta."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="ui">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Rafa</b> · UX/UI</span></div>
+              <p class="quote">"Flow de 2 perguntas, com defaults bons, é um Flow honesto. Preview das 4 datas fecha a confiança."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="service">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Júlia</b> · Service</span></div>
+              <p class="quote">"Adoro o 'cancelar essa' não destruir a série. Preserva confiança no automatismo — essencial."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="product">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Dani</b> · Product</span></div>
+              <p class="quote">"Retenção semanal medível. Engajamento recorrente sem campanha. Quero ontem."</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ─────────── P-12 — RE-ENGAGEMENT PERSONALIZADO ─────────── -->
+      <article class="proposal">
+        <header class="proposal-head">
+          <div class="left">
+            <span class="stage"><span class="stage-dot"></span>Re-engajamento · D+7 sem reserva</span>
+            <h3 class="h-1 title">Sofia percebe sua ausência.</h3>
+            <p class="sub">
+              Sete dias sem reservar — Sofia lembra o usuário com uma <b>sugestão baseada no histórico</b>,
+              não um push genérico. A saída de respeito ("tô fora essa semana") evita percepção de spam e
+              alimenta o modelo com sinal de intenção negativa.
+            </p>
+          </div>
+          <span class="id">P-12 · re-engagement</span>
+        </header>
+
+        <div class="blocks">
+
+          <!-- COPY -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v3H4zM4 10h10v3H4zM4 16h13v3H4z"/></svg></span>
+              Copy
+            </div>
+            <div class="copy-list">
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · trigger D+7 · manhã</div>
+                <div class="txt">Oi! Essa semana você ainda não reservou nada por aqui 👀
+
+Reparei que você costuma reservar <b>Tribbos quartas de manhã</b>. A <b>sala 02</b> tá livre essa quarta no mesmo horário 👇</div>
+                <div class="note">Trigger: 7 dias sem reserva criada. Horário: terça ou quarta, 9h (antes da decisão do dia). Personalização: sala e horário mais frequente dos últimos 30 dias. Condição: usuário ativo na plataforma nos últimos 30 dias (evita reativar churned).</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · card + respostas rápidas</div>
+                <div class="txt">[ Card: Tribbos sala 02 · sua escolha frequente · botão "Reservar essa" ]
+
+<i>[ Outro horário ]  [ Outra sala ]  [ Tô fora essa semana ]</i></div>
+                <div class="note">"Tô fora essa semana" suspende o ciclo de re-engagement por 7 dias e registra sinal de low-intent. Não disparar mais de 1× por semana. Após 3 "tô fora" consecutivos, encerrar automaticamente o ciclo e sinalizar para time de CS.</div>
+              </div>
+              <div class="copy-item" data-who="user">
+                <div class="who">Usuário · responde com saída de respeito</div>
+                <div class="txt">Tô fora essa semana</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · resposta à saída</div>
+                <div class="txt">Entendido! 💛 Quando precisar, é só me chamar.
+
+Te procuro semana que vem.</div>
+                <div class="note">Nenhum follow-up na semana corrente. Ciclo retoma D+7 a partir dessa data.</div>
+              </div>
+              <div class="copy-item" data-who="user">
+                <div class="who">Usuário · aceita sugestão</div>
+                <div class="txt">[ toca em "Reservar essa" ]</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · Flow padrão de reserva</div>
+                <div class="txt">[ abre Flow "Confirmar" com sala pré-selecionada e horário do histórico já preenchido ]</div>
+                <div class="note">Conecta com P-00 (flow padrão de reserva). Pré-preenche sala, data (próxima quarta) e horário do histórico. Usuário só precisa confirmar.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FLOW -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7l3 9M16 7l-3 9"/></svg></span>
+              Fluxograma
+            </div>
+            <div class="flow-wrap">
+              <svg viewBox="0 0 380 440" xmlns="http://www.w3.org/2000/svg" aria-label="Fluxo re-engagement">
+                <defs>
+                  <marker id="ar-p12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                    <path d="M0 0L10 5L0 10z" fill="#3e3e37"/>
+                  </marker>
+                  <style>
+                    .p12-sys { fill: #ede1ff; stroke: #5d16c2; stroke-width:1.4; }
+                    .p12-bot { fill: #fef9cf; stroke: #988908; stroke-width:1.4; }
+                    .p12-usr { fill: #cde7aa; stroke: #4d761a; stroke-width:1.4; }
+                    .p12-dec { fill: #ebf2fa; stroke: #234d7c; stroke-width:1.4; }
+                    .p12-end { fill: #fff3e7; stroke: #98540c; stroke-width:1.4; }
+                    .t12 { font-family:'Manrope',system-ui; font-size:11px; fill:#1a1810; font-weight:600; }
+                    .t12s { font-family:'Manrope',system-ui; font-size:9.5px; fill:#4e4d45; }
+                    .l12 { stroke:#3e3e37; stroke-width:1.4; fill:none; }
+                    .lb12 { font-family:'Manrope',system-ui; font-size:9.5px; fill:#71716a; font-weight:600; }
+                  </style>
+                </defs>
+
+                <rect class="p12-sys" x="70" y="12" width="240" height="36" rx="8"/>
+                <text class="t12" x="190" y="30" text-anchor="middle">Trigger D+7 sem reserva</text>
+                <text class="t12s" x="190" y="42" text-anchor="middle">usuário ativo nos últimos 30 dias</text>
+
+                <line class="l12" x1="190" y1="48" x2="190" y2="64" marker-end="url(#ar-p12)"/>
+
+                <rect class="p12-bot" x="60" y="68" width="260" height="44" rx="8"/>
+                <text class="t12" x="190" y="87" text-anchor="middle">Sofia · sugestão personalizada</text>
+                <text class="t12s" x="190" y="100" text-anchor="middle">sala + horário do histórico · card + respostas rápidas</text>
+
+                <line class="l12" x1="190" y1="112" x2="190" y2="128" marker-end="url(#ar-p12)"/>
+
+                <polygon class="p12-dec" points="190,132 290,158 190,184 90,158"/>
+                <text class="t12" x="190" y="156" text-anchor="middle">Reação</text>
+                <text class="t12s" x="190" y="168" text-anchor="middle">do usuário</text>
+
+                <!-- branch: reserva -->
+                <line class="l12" x1="290" y1="158" x2="338" y2="158" marker-end="url(#ar-p12)"/>
+                <text class="lb12" x="314" y="149" text-anchor="middle">reserva</text>
+                <rect class="p12-usr" x="338" y="140" width="36" height="36" rx="8"/>
+                <text class="t12s" x="356" y="158" text-anchor="middle">P-00</text>
+                <text class="t12s" x="356" y="170" text-anchor="middle">flow</text>
+
+                <!-- branch: tô fora -->
+                <line class="l12" x1="90" y1="158" x2="42" y2="158" marker-end="url(#ar-p12)"/>
+                <text class="lb12" x="66" y="149" text-anchor="middle">tô fora</text>
+                <rect class="p12-end" x="4" y="140" width="38" height="36" rx="8"/>
+                <text class="t12s" x="23" y="158" text-anchor="middle">pausa</text>
+                <text class="t12s" x="23" y="170" text-anchor="middle">7 dias</text>
+
+                <!-- branch: outro horário -->
+                <line class="l12" x1="190" y1="184" x2="190" y2="200" marker-end="url(#ar-p12)"/>
+                <text class="lb12" x="198" y="196" text-anchor="start">outro horário / sala</text>
+
+                <rect class="p12-bot" x="60" y="204" width="260" height="36" rx="8"/>
+                <text class="t12" x="190" y="222" text-anchor="middle">Sofia busca opções compatíveis</text>
+                <text class="t12s" x="190" y="234" text-anchor="middle">região + capacidade do histórico</text>
+
+                <line class="l12" x1="190" y1="240" x2="190" y2="256" marker-end="url(#ar-p12)"/>
+
+                <polygon class="p12-dec" points="190,260 286,284 190,308 94,284"/>
+                <text class="t12" x="190" y="282" text-anchor="middle">Confirma?</text>
+
+                <line class="l12" x1="286" y1="284" x2="330" y2="284" marker-end="url(#ar-p12)"/>
+                <text class="lb12" x="308" y="275" text-anchor="middle">sim</text>
+                <rect class="p12-usr" x="330" y="266" width="44" height="36" rx="8"/>
+                <text class="t12s" x="352" y="284" text-anchor="middle">reserva</text>
+                <text class="t12s" x="352" y="296" text-anchor="middle">criada</text>
+
+                <line class="l12" x1="94" y1="284" x2="48" y2="284" marker-end="url(#ar-p12)"/>
+                <text class="lb12" x="71" y="275" text-anchor="middle">não</text>
+                <rect class="p12-end" x="4" y="266" width="44" height="36" rx="8"/>
+                <text class="t12s" x="26" y="284" text-anchor="middle">ciclo D+7</text>
+                <text class="t12s" x="26" y="296" text-anchor="middle">retoma</text>
+
+                <line class="l12" x1="190" y1="308" x2="190" y2="324" marker-end="url(#ar-p12)"/>
+
+                <rect class="p12-bot" x="60" y="328" width="260" height="44" rx="8"/>
+                <text class="t12" x="190" y="347" text-anchor="middle">3 "tô fora" consecutivos</text>
+                <text class="t12s" x="190" y="360" text-anchor="middle">encerra ciclo · sinaliza CS · nenhum trigger por 30 dias</text>
+              </svg>
+              <div class="flow-legend">
+                <span class="key"><span class="swatch" style="background:#ede1ff;border:1px solid #5d16c2"></span>Sistema / Trigger</span>
+                <span class="key"><span class="swatch" style="background:#fef9cf;border:1px solid #988908"></span>Sofia</span>
+                <span class="key"><span class="swatch" style="background:#cde7aa;border:1px solid #4d761a"></span>Reserva criada</span>
+                <span class="key"><span class="swatch" style="background:#ebf2fa;border:1px solid #234d7c"></span>Decisão</span>
+                <span class="key"><span class="swatch" style="background:#fff3e7;border:1px solid #98540c"></span>Saída / Pausa</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SKETCH -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="3" width="12" height="18" rx="2"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg></span>
+              Esboço no simulador
+            </div>
+            <div class="sketch">
+              <div class="mini-phone">
+                <div class="mini-status"><span>9:12</span><span>● ⚡</span></div>
+                <div class="mini-header">
+                  <div class="av">woba</div>
+                  <div>
+                    <div class="nm">Woba Staging</div>
+                    <div class="sub">Sofia · Woba Assist</div>
+                  </div>
+                </div>
+                <div class="mini-stream">
+                  <div class="mini-divider">terça-feira</div>
+                  <div class="mini-bub">Oi! Essa semana você ainda não reservou nada 👀
+
+Reparei que você costuma reservar <b>Tribbos quartas de manhã</b>. A <b>sala 02</b> tá livre essa quarta no mesmo horário 👇<span class="t">9:12</span></div>
+                  <div class="mini-card">
+                    <div class="body" style="padding:10px 11px">
+                      <div style="font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#71716a">Tribbos Coworking</div>
+                      <div class="b1" style="margin-top:3px">Sala 02 · quarta às 10h</div>
+                      <div class="b2">✨ Sua escolha frequente</div>
+                      <div style="background:#f9e10d;color:#1a1810;text-align:center;padding:6px;border-radius:6px;font-weight:700;font-size:10.5px;margin-top:8px">📋 Reservar essa</div>
+                      <div class="t">9:12</div>
+                    </div>
+                  </div>
+                  <div class="mini-quick">
+                    <span class="chip">Outro horário</span>
+                    <span class="chip">Outra sala</span>
+                    <span class="chip">Tô fora essa semana</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CRIT -->
+        <div class="crit">
+          <div class="crit-head">
+            <h4 class="h-3">Verdicto do time</h4>
+            <span class="muted body-sm">3 verdes · 1 atenção</span>
+          </div>
+          <div class="crit-grid">
+            <div class="crit-card" data-verdict="yes" data-role="writer">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Cami</b> · UX Writer</span></div>
+              <p class="quote">"'Reparei que você costuma' já provado em P-03. Não soa anúncio porque vem do histórico real."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="ui">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Rafa</b> · UX/UI</span></div>
+              <p class="quote">"Card com pré-seleção visível + 3 chips de saída é o layout certo. Nunca deixar o usuário sem opção de sair."</p>
+            </div>
+            <div class="crit-card" data-verdict="watch" data-role="service">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Júlia</b> · Service</span></div>
+              <p class="quote">"Limitar a 1×/semana é crítico. E a regra dos 3 'tô fora' → CS precisa ser monitorada de perto no lançamento."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="product">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Dani</b> · Product</span></div>
+              <p class="quote">"Métrica clara: % de D+7 convertidos em reserva. Esperado 25–35% na base recorrente. Base sólida pro A/B."</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ─────────── P-13 — RESERVAR DE NOVO ─────────── -->
+      <article class="proposal">
+        <header class="proposal-head">
+          <div class="left">
+            <span class="stage"><span class="stage-dot"></span>Atalho de retorno · qualquer saudação</span>
+            <h3 class="h-1 title">De volta ao lugar de sempre.</h3>
+            <p class="sub">
+              Ao receber qualquer saudação ("oi", "olá", "boa tarde"), Sofia verifica o histórico e,
+              se houver reservas recentes, oferece-as como <b>atalho com Flow já preenchido</b>.
+              Zero decisões novas — 1 toque pra reservar de novo.
+            </p>
+          </div>
+          <span class="id">P-13 · reservar de novo</span>
+        </header>
+
+        <div class="blocks">
+
+          <!-- COPY -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v3H4zM4 10h10v3H4zM4 16h13v3H4z"/></svg></span>
+              Copy
+            </div>
+            <div class="copy-list">
+              <div class="copy-item" data-who="user">
+                <div class="who">Usuário · saudação</div>
+                <div class="txt">oi</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · resposta com atalho</div>
+                <div class="txt">Oi, <b>Marina</b>! 👋
+
+Quer repetir alguma das suas últimas reservas? 👇</div>
+                <div class="note">Condição: usuário tem ao menos 1 reserva nos últimos 30 dias. Se não tiver histórico, flui para saudação de onboarding (P-11) ou busca padrão. Máximo 3 cards de histórico — ordenados do mais recente ao mais antigo.</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · 3 cards de histórico</div>
+                <div class="txt">[ Card: Tribbos · sala 02 · há 3 dias · botão "🔄 Reservar de novo" ]
+[ Card: Vila Olímpia Hub · sala criativa 04 · semana passada · botão "🔄 Reservar de novo" ]
+[ Card: WorkBricks Itaim · sala executiva · há 2 semanas · botão "🔄 Reservar de novo" ]
+
+<i>[ Buscar nova ]  [ Outro horário ]</i></div>
+                <div class="note">Cada card mostra nome do coworking, sala, data da última vez. Ao tocar em "Reservar de novo", abre Flow padrão (P-00) pré-preenchido com a mesma sala, sugerindo a próxima data disponível no mesmo dia da semana e horário.</div>
+              </div>
+              <div class="copy-item" data-who="user">
+                <div class="who">Usuário · escolhe atalho</div>
+                <div class="txt">[ toca em "Reservar de novo" no card Tribbos ]</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · Flow pré-preenchido</div>
+                <div class="txt">[ Flow "Confirmar" com Tribbos sala 02, próxima terça 10h–12h, 5 créditos, pré-selecionado ]</div>
+                <div class="note">Se o horário habitual não estiver disponível na próxima data, Sofia apresenta 2 alternativas: mesmo horário em outro dia próximo ou horário diferente na mesma data.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FLOW -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7l3 9M16 7l-3 9"/></svg></span>
+              Fluxograma
+            </div>
+            <div class="flow-wrap">
+              <svg viewBox="0 0 380 380" xmlns="http://www.w3.org/2000/svg" aria-label="Fluxo reservar de novo">
+                <defs>
+                  <marker id="ar-p13" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                    <path d="M0 0L10 5L0 10z" fill="#3e3e37"/>
+                  </marker>
+                  <style>
+                    .p13-sys { fill: #ede1ff; stroke: #5d16c2; stroke-width:1.4; }
+                    .p13-bot { fill: #fef9cf; stroke: #988908; stroke-width:1.4; }
+                    .p13-usr { fill: #cde7aa; stroke: #4d761a; stroke-width:1.4; }
+                    .p13-dec { fill: #ebf2fa; stroke: #234d7c; stroke-width:1.4; }
+                    .t13 { font-family:'Manrope',system-ui; font-size:11px; fill:#1a1810; font-weight:600; }
+                    .t13s { font-family:'Manrope',system-ui; font-size:9.5px; fill:#4e4d45; }
+                    .l13 { stroke:#3e3e37; stroke-width:1.4; fill:none; }
+                    .lb13 { font-family:'Manrope',system-ui; font-size:9.5px; fill:#71716a; font-weight:600; }
+                  </style>
+                </defs>
+
+                <rect class="p13-usr" x="110" y="12" width="160" height="32" rx="8"/>
+                <text class="t13" x="190" y="32" text-anchor="middle">Usuário envia saudação</text>
+
+                <line class="l13" x1="190" y1="44" x2="190" y2="60" marker-end="url(#ar-p13)"/>
+
+                <polygon class="p13-dec" points="190,64 290,90 190,116 90,90"/>
+                <text class="t13" x="190" y="88" text-anchor="middle">Tem histórico?</text>
+                <text class="t13s" x="190" y="100" text-anchor="middle">reservas nos últimos 30 dias</text>
+
+                <line class="l13" x1="90" y1="90" x2="40" y2="90" marker-end="url(#ar-p13)"/>
+                <text class="lb13" x="65" y="81" text-anchor="middle">não</text>
+                <rect class="p13-bot" x="2" y="72" width="38" height="36" rx="8"/>
+                <text class="t13s" x="21" y="90" text-anchor="middle">P-11</text>
+                <text class="t13s" x="21" y="102" text-anchor="middle">onboard</text>
+
+                <line class="l13" x1="190" y1="116" x2="190" y2="132" marker-end="url(#ar-p13)"/>
+                <text class="lb13" x="198" y="128" text-anchor="start">sim</text>
+
+                <rect class="p13-bot" x="50" y="136" width="280" height="36" rx="8"/>
+                <text class="t13" x="190" y="154" text-anchor="middle">Sofia exibe 3 últimas reservas como atalho</text>
+                <text class="t13s" x="190" y="166" text-anchor="middle">card com sala · data relativa · botão "Reservar de novo"</text>
+
+                <line class="l13" x1="190" y1="172" x2="190" y2="188" marker-end="url(#ar-p13)"/>
+
+                <polygon class="p13-dec" points="190,192 290,218 190,244 90,218"/>
+                <text class="t13" x="190" y="216" text-anchor="middle">Escolhe atalho</text>
+                <text class="t13s" x="190" y="228" text-anchor="middle">ou nova busca?</text>
+
+                <line class="l13" x1="90" y1="218" x2="40" y2="218" marker-end="url(#ar-p13)"/>
+                <text class="lb13" x="65" y="209" text-anchor="middle">nova busca</text>
+                <rect class="p13-bot" x="2" y="200" width="38" height="36" rx="8"/>
+                <text class="t13s" x="21" y="218" text-anchor="middle">P-00</text>
+                <text class="t13s" x="21" y="230" text-anchor="middle">busca</text>
+
+                <line class="l13" x1="190" y1="244" x2="190" y2="260" marker-end="url(#ar-p13)"/>
+                <text class="lb13" x="198" y="256" text-anchor="start">atalho</text>
+
+                <polygon class="p13-dec" points="190,264 286,288 190,312 94,288"/>
+                <text class="t13" x="190" y="286" text-anchor="middle">Slot disponível?</text>
+
+                <line class="l13" x1="286" y1="288" x2="334" y2="288" marker-end="url(#ar-p13)"/>
+                <text class="lb13" x="310" y="279" text-anchor="middle">sim</text>
+                <rect class="p13-usr" x="334" y="270" width="42" height="36" rx="8"/>
+                <text class="t13s" x="355" y="288" text-anchor="middle">P-00</text>
+                <text class="t13s" x="355" y="300" text-anchor="middle">pré-fill</text>
+
+                <line class="l13" x1="94" y1="288" x2="46" y2="288" marker-end="url(#ar-p13)"/>
+                <text class="lb13" x="70" y="279" text-anchor="middle">não</text>
+                <rect class="p13-bot" x="2" y="270" width="44" height="36" rx="8"/>
+                <text class="t13s" x="24" y="288" text-anchor="middle">2 alt.:</text>
+                <text class="t13s" x="24" y="300" text-anchor="middle">hora/dia</text>
+
+                <line class="l13" x1="190" y1="312" x2="190" y2="328" marker-end="url(#ar-p13)"/>
+                <rect class="p13-usr" x="100" y="332" width="180" height="32" rx="8"/>
+                <text class="t13" x="190" y="352" text-anchor="middle">Reserva confirmada ✓</text>
+              </svg>
+              <div class="flow-legend">
+                <span class="key"><span class="swatch" style="background:#ede1ff;border:1px solid #5d16c2"></span>Sistema</span>
+                <span class="key"><span class="swatch" style="background:#fef9cf;border:1px solid #988908"></span>Sofia</span>
+                <span class="key"><span class="swatch" style="background:#cde7aa;border:1px solid #4d761a"></span>Confirmado</span>
+                <span class="key"><span class="swatch" style="background:#ebf2fa;border:1px solid #234d7c"></span>Decisão</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SKETCH -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="3" width="12" height="18" rx="2"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg></span>
+              Esboço no simulador
+            </div>
+            <div class="sketch">
+              <div class="mini-phone">
+                <div class="mini-status"><span>14:08</span><span>● ⚡</span></div>
+                <div class="mini-header">
+                  <div class="av">woba</div>
+                  <div>
+                    <div class="nm">Woba Staging</div>
+                    <div class="sub">Sofia · Woba Assist</div>
+                  </div>
+                </div>
+                <div class="mini-stream">
+                  <div class="mini-bub user">oi<span class="t">14:08 <span class="ck">✓✓</span></span></div>
+                  <div class="mini-bub">Oi, <b>Marina</b>! 👋
+
+Quer repetir alguma das suas últimas reservas? 👇<span class="t">14:08</span></div>
+                  <div class="mini-card">
+                    <div class="body" style="padding:10px 11px">
+                      <div style="font-size:9px;opacity:0.6">🕒 há 3 dias</div>
+                      <div class="b1" style="margin-top:2px">Tribbos · sala 02</div>
+                      <div class="b2">Terças 10h–12h</div>
+                      <div style="background:#1a1810;color:#fff;text-align:center;padding:5px 0;border-radius:5px;font-weight:700;font-size:10.5px;margin-top:7px">🔄 Reservar de novo</div>
+                      <div class="t">14:08</div>
+                    </div>
+                  </div>
+                  <div class="mini-quick">
+                    <span class="chip">Buscar nova</span>
+                    <span class="chip">Outro horário</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CRIT -->
+        <div class="crit">
+          <div class="crit-head">
+            <h4 class="h-3">Verdicto do time</h4>
+            <span class="muted body-sm">4 verdes</span>
+          </div>
+          <div class="crit-grid">
+            <div class="crit-card" data-verdict="yes" data-role="writer">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Cami</b> · UX Writer</span></div>
+              <p class="quote">"Saudação que entende contexto é a diferença entre assistente e produto burro. Essa é a proposta mais simples e mais poderosa."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="ui">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Rafa</b> · UX/UI</span></div>
+              <p class="quote">"Métrica: % de reservas via atalho. Esperado alto. Conecta naturalmente com P-03 (recorrência)."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="service">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Júlia</b> · Service</span></div>
+              <p class="quote">"A condição de 30 dias é o ponto de atenção — um usuário que foi de férias não deve ver histórico stale como sugestão quente."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="product">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Dani</b> · Product</span></div>
+              <p class="quote">"Quick win. Esforço baixo, impacto direto em time-to-book. Bom candidato pra sprints de performance."</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ─────────── I-07 — SUMÁRIO SEMANAL DO GESTOR ─────────── -->
+      <article class="proposal">
+        <header class="proposal-head">
+          <div class="left">
+            <span class="stage" style="background:#fff3e7;color:#98540c;border-color:#f4b470"><span class="stage-dot" style="background:#f4b470"></span>Ideação · em crit · B2B</span>
+            <h3 class="h-1 title">Sofia é o painel do gestor.</h3>
+            <p class="sub">
+              Para gestores e RH com plano B2B: toda segunda-feira, um <b>resumo semanal por WhatsApp</b> —
+              uso do time, salas mais reservadas, créditos restantes, alertas de usuários inativos.
+              Sem abrir dashboard. Sofia é o relatório.
+            </p>
+          </div>
+          <span class="id">I-07 · sumário B2B</span>
+        </header>
+
+        <div class="blocks">
+
+          <!-- COPY -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v3H4zM4 10h10v3H4zM4 16h13v3H4z"/></svg></span>
+              Copy
+            </div>
+            <div class="copy-list">
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · sumário semanal · segunda 9h</div>
+                <div class="txt">Bom dia, <b>Roberto</b> 👋 Aqui vai o resumo da semana do seu time:
+
+📊 <b>Semana passada · Acme Corp</b>
+🏢 12 reservas · 6 coworkings diferentes
+💳 87/200 créditos usados (43%)
+👥 8 de 12 membros reservaram
+
+⚠️ <b>Marina não reserva há 14 dias</b>
+⚠️ <b>Carlos não reserva há 10 dias</b>
+
+Ver relatório completo no app?</div>
+                <div class="note">Trigger: toda segunda às 9h para usuários com role "manager" ou "admin" em conta B2B. Dados da semana anterior (seg–dom). Alertas de inatividade: membros sem reserva há mais de 7 dias. Máximo 3 alertas por sumário.</div>
+              </div>
+              <div class="copy-item" data-who="user">
+                <div class="who">Gestor · reage ao alerta</div>
+                <div class="txt">O que tá acontecendo com a Marina?</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · drill-down de membro</div>
+                <div class="txt"><b>Marina Souza</b>
+📅 Última reserva: 2 mai · Tribbos
+📊 Média histórica: 2,3 reservas/semana
+🔔 Status: inativa há 14 dias
+
+Quer que eu mande uma mensagem pra ela ou prefere falar diretamente?</div>
+                <div class="note">Drill-down de membro ativo no contexto do chat do gestor. Dados de último acesso e histórico. Opção de enviar nudge para o membro via Sofia ou deixar para o gestor.</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · ações disponíveis</div>
+                <div class="txt"><i>[ Enviar lembrete pra Marina ]  [ Ver reservas do time ]  [ Ajustar alertas ]</i></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FLOW -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7l3 9M16 7l-3 9"/></svg></span>
+              Fluxograma
+            </div>
+            <div class="flow-wrap">
+              <svg viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg" aria-label="Fluxo sumário B2B">
+                <defs>
+                  <marker id="ar-i07" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                    <path d="M0 0L10 5L0 10z" fill="#3e3e37"/>
+                  </marker>
+                  <style>
+                    .i7-sys { fill: #ede1ff; stroke: #5d16c2; stroke-width:1.4; }
+                    .i7-bot { fill: #fef9cf; stroke: #988908; stroke-width:1.4; }
+                    .i7-usr { fill: #cde7aa; stroke: #4d761a; stroke-width:1.4; }
+                    .i7-b2b { fill: #ecf2fc; stroke: #343ced; stroke-width:1.4; }
+                    .t7 { font-family:'Manrope',system-ui; font-size:11px; fill:#1a1810; font-weight:600; }
+                    .t7s { font-family:'Manrope',system-ui; font-size:9.5px; fill:#4e4d45; }
+                    .l7 { stroke:#3e3e37; stroke-width:1.4; fill:none; }
+                  </style>
+                </defs>
+
+                <rect class="i7-sys" x="60" y="12" width="260" height="36" rx="8"/>
+                <text class="t7" x="190" y="30" text-anchor="middle">Cron semanal · segunda 9h</text>
+                <text class="t7s" x="190" y="42" text-anchor="middle">usuários com role manager/admin em conta B2B</text>
+
+                <line class="l7" x1="190" y1="48" x2="190" y2="64" marker-end="url(#ar-i07)"/>
+
+                <rect class="i7-b2b" x="60" y="68" width="260" height="44" rx="8"/>
+                <text class="t7" x="190" y="87" text-anchor="middle">Agrega dados da semana anterior</text>
+                <text class="t7s" x="190" y="100" text-anchor="middle">reservas · créditos · membros ativos · alertas inatividade</text>
+
+                <line class="l7" x1="190" y1="112" x2="190" y2="128" marker-end="url(#ar-i07)"/>
+
+                <rect class="i7-bot" x="60" y="132" width="260" height="36" rx="8"/>
+                <text class="t7" x="190" y="150" text-anchor="middle">Sofia envia sumário formatado</text>
+                <text class="t7s" x="190" y="162" text-anchor="middle">métricas + alertas de inatividade (máx. 3)</text>
+
+                <line class="l7" x1="190" y1="168" x2="190" y2="184" marker-end="url(#ar-i07)"/>
+
+                <rect class="i7-usr" x="60" y="188" width="260" height="36" rx="8"/>
+                <text class="t7" x="190" y="206" text-anchor="middle">Gestor reage (opcional)</text>
+                <text class="t7s" x="190" y="218" text-anchor="middle">drill-down · nudge para membro · ajustar alertas</text>
+
+                <line class="l7" x1="190" y1="224" x2="190" y2="240" marker-end="url(#ar-i07)"/>
+
+                <rect class="i7-b2b" x="60" y="244" width="260" height="44" rx="8"/>
+                <text class="t7" x="190" y="263" text-anchor="middle">Sofia executa ação do gestor</text>
+                <text class="t7s" x="190" y="276" text-anchor="middle">envia lembrete ao membro · exibe detalhes · atualiza prefs</text>
+              </svg>
+              <div class="flow-legend">
+                <span class="key"><span class="swatch" style="background:#ede1ff;border:1px solid #5d16c2"></span>Sistema / Cron</span>
+                <span class="key"><span class="swatch" style="background:#ecf2fc;border:1px solid #343ced"></span>Dados B2B</span>
+                <span class="key"><span class="swatch" style="background:#fef9cf;border:1px solid #988908"></span>Sofia</span>
+                <span class="key"><span class="swatch" style="background:#cde7aa;border:1px solid #4d761a"></span>Gestor / Ação</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CRIT -->
+        <div class="crit">
+          <div class="crit-head">
+            <h4 class="h-3">Verdicto do time</h4>
+            <span class="muted body-sm">Em ideação · precisa de crit formal</span>
+          </div>
+          <div class="crit-grid">
+            <div class="crit-card" data-verdict="yes" data-role="writer">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Cami</b> · UX Writer</span></div>
+              <p class="quote">"Tom certo: 'resumo do seu time', não 'relatório corporativo'. A linguagem conversacional é o diferencial frente a qualquer dashboard."</p>
+            </div>
+            <div class="crit-card" data-verdict="watch" data-role="ui">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Rafa</b> · UX/UI</span></div>
+              <p class="quote">"O sumário em texto corre risco de ficar longo. Pensar em um card rico com scroll horizontal ou link pro app quando as métricas crescerem."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="service">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Júlia</b> · Service</span></div>
+              <p class="quote">"A função de drill-down + nudge resolve uma dor real de gestores B2B que hoje precisam ligar pro membro. Diferenciação de retenção corporativa."</p>
+            </div>
+            <div class="crit-card" data-verdict="watch" data-role="product">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Dani</b> · Product</span></div>
+              <p class="quote">"Precisa de estrutura de roles/permissões na conta B2B antes de colocar em crit. Dependência de infra — não é quick win."</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ─────────── I-08 — CALENDAR SYNC ─────────── -->
+      <article class="proposal">
+        <header class="proposal-head">
+          <div class="left">
+            <span class="stage" style="background:#fff3e7;color:#98540c;border-color:#f4b470"><span class="stage-dot" style="background:#f4b470"></span>Ideação · em crit · integração</span>
+            <h3 class="h-1 title">Criou no Calendar, sala reservada.</h3>
+            <p class="sub">
+              Sync <b>bidirecional com Google Calendar e Outlook</b>. Você cria evento "Reunião — Tribbos sala 02";
+              Sofia detecta e cria a reserva. Cancela no Calendar → cancela na Woba. Nunca mais dupla-entrada.
+              Onde mora o agendamento, mora a reserva.
+            </p>
+          </div>
+          <span class="id">I-08 · calendar sync</span>
+        </header>
+
+        <div class="blocks">
+
+          <!-- COPY -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v3H4zM4 10h10v3H4zM4 16h13v3H4z"/></svg></span>
+              Copy
+            </div>
+            <div class="copy-list">
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · detecção de evento no Calendar</div>
+                <div class="txt">Oi! Vi que você criou um evento no Google Calendar:
+
+📅 <b>"Reunião de alinhamento"</b>
+⏰ Terça, 27/05 · 10:00–12:00
+👥 5 pessoas
+
+Quer que eu já reserve uma sala pra essa reunião?</div>
+                <div class="note">Trigger: novo evento criado no Calendar conectado com duração ≥ 30 min e ≥ 2 participantes. Matching por título (palavras-chave: "reunião", "meeting", "call", coworking parceiro) ou horário livre no perfil do usuário. Não disparar para eventos pessoais (aniversários, compromissos solo).</div>
+              </div>
+              <div class="copy-item" data-who="user">
+                <div class="who">Usuário · aceita</div>
+                <div class="txt">Sim, pode reservar</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · sugestão de sala</div>
+                <div class="txt">Baseado no seu histórico, você costuma usar o <b>Tribbos</b> nesse horário.
+
+[ Card: Tribbos · sala 02 · terça 27/05 · 10h–12h · 14 créditos ]
+
+<i>[ Reservar essa ]  [ Buscar outra ]</i></div>
+                <div class="note">Prioriza sala do histórico para mesmo dia/horário. Se não disponível, mostra 3 alternativas equivalentes (P-07 engine). Conecta com P-04 (avisar time) após confirmar.</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · confirmação + sincronização</div>
+                <div class="txt">Reservado ✅
+
+Adicionei o endereço do Tribbos no evento do seu Calendar. Se você cancelar o evento lá, a reserva aqui cancela junto — tudo sincronizado 🔄</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · cancelamento via Calendar (async)</div>
+                <div class="txt">Oi, vi que você cancelou o evento do dia 27 no Calendar.
+
+Cancelei a reserva da sala 02 no Tribbos também. 💳 14 créditos voltaram pra sua carteira.</div>
+                <div class="note">Webhook de cancelamento de evento. Verificar política de cancelamento (prazo de reembolso) antes de executar — avisar usuário se já fora do prazo.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FLOW -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7l3 9M16 7l-3 9"/></svg></span>
+              Fluxograma
+            </div>
+            <div class="flow-wrap">
+              <svg viewBox="0 0 380 400" xmlns="http://www.w3.org/2000/svg" aria-label="Fluxo calendar sync">
+                <defs>
+                  <marker id="ar-i08" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                    <path d="M0 0L10 5L0 10z" fill="#3e3e37"/>
+                  </marker>
+                  <style>
+                    .i8-sys { fill: #ede1ff; stroke: #5d16c2; stroke-width:1.4; }
+                    .i8-bot { fill: #fef9cf; stroke: #988908; stroke-width:1.4; }
+                    .i8-usr { fill: #cde7aa; stroke: #4d761a; stroke-width:1.4; }
+                    .i8-cal { fill: #ecf2fc; stroke: #343ced; stroke-width:1.4; }
+                    .i8-dec { fill: #ebf2fa; stroke: #234d7c; stroke-width:1.4; }
+                    .t8 { font-family:'Manrope',system-ui; font-size:11px; fill:#1a1810; font-weight:600; }
+                    .t8s { font-family:'Manrope',system-ui; font-size:9.5px; fill:#4e4d45; }
+                    .l8 { stroke:#3e3e37; stroke-width:1.4; fill:none; }
+                    .lb8 { font-family:'Manrope',system-ui; font-size:9.5px; fill:#71716a; font-weight:600; }
+                  </style>
+                </defs>
+
+                <!-- Calendar webhook -->
+                <rect class="i8-cal" x="60" y="12" width="260" height="36" rx="8"/>
+                <text class="t8" x="190" y="30" text-anchor="middle">Webhook: evento criado no Calendar</text>
+                <text class="t8s" x="190" y="42" text-anchor="middle">Google Calendar · Outlook · Apple Calendar</text>
+
+                <line class="l8" x1="190" y1="48" x2="190" y2="64" marker-end="url(#ar-i08)"/>
+
+                <polygon class="i8-dec" points="190,68 290,94 190,120 90,94"/>
+                <text class="t8" x="190" y="92" text-anchor="middle">Reunião?</text>
+                <text class="t8s" x="190" y="104" text-anchor="middle">≥2 participantes · ≥30min</text>
+
+                <line class="l8" x1="90" y1="94" x2="40" y2="94" marker-end="url(#ar-i08)"/>
+                <text class="lb8" x="65" y="85" text-anchor="middle">não</text>
+                <rect class="i8-sys" x="2" y="76" width="38" height="36" rx="8"/>
+                <text class="t8s" x="21" y="94" text-anchor="middle">ignora</text>
+                <text class="t8s" x="21" y="106" text-anchor="middle">evento</text>
+
+                <line class="l8" x1="190" y1="120" x2="190" y2="136" marker-end="url(#ar-i08)"/>
+                <text class="lb8" x="198" y="132" text-anchor="start">sim</text>
+
+                <rect class="i8-bot" x="60" y="140" width="260" height="36" rx="8"/>
+                <text class="t8" x="190" y="158" text-anchor="middle">Sofia pergunta: "Quer reservar sala?"</text>
+                <text class="t8s" x="190" y="170" text-anchor="middle">sugestão baseada no histórico do horário</text>
+
+                <line class="l8" x1="190" y1="176" x2="190" y2="192" marker-end="url(#ar-i08)"/>
+
+                <polygon class="i8-dec" points="190,196 290,222 190,248 90,222"/>
+                <text class="t8" x="190" y="220" text-anchor="middle">Confirma?</text>
+
+                <line class="l8" x1="90" y1="222" x2="40" y2="222" marker-end="url(#ar-i08)"/>
+                <text class="lb8" x="65" y="213" text-anchor="middle">não</text>
+                <rect class="i8-sys" x="2" y="204" width="38" height="36" rx="8"/>
+                <text class="t8s" x="21" y="222" text-anchor="middle">encerra</text>
+
+                <line class="l8" x1="190" y1="248" x2="190" y2="264" marker-end="url(#ar-i08)"/>
+                <text class="lb8" x="198" y="260" text-anchor="start">sim</text>
+
+                <rect class="i8-usr" x="60" y="268" width="260" height="36" rx="8"/>
+                <text class="t8" x="190" y="286" text-anchor="middle">Reserva criada + endereço no Calendar</text>
+                <text class="t8s" x="190" y="298" text-anchor="middle">evento atualizado com localização · link de acesso</text>
+
+                <line class="l8" x1="190" y1="304" x2="190" y2="320" marker-end="url(#ar-i08)"/>
+
+                <rect class="i8-cal" x="60" y="324" width="260" height="44" rx="8"/>
+                <text class="t8" x="190" y="343" text-anchor="middle">Webhook: evento cancelado ou remarcado</text>
+                <text class="t8s" x="190" y="356" text-anchor="middle">cancela / remarca reserva · verifica prazo de reembolso · notifica</text>
+              </svg>
+              <div class="flow-legend">
+                <span class="key"><span class="swatch" style="background:#ecf2fc;border:1px solid #343ced"></span>Calendar (ext.)</span>
+                <span class="key"><span class="swatch" style="background:#ede1ff;border:1px solid #5d16c2"></span>Sistema</span>
+                <span class="key"><span class="swatch" style="background:#fef9cf;border:1px solid #988908"></span>Sofia</span>
+                <span class="key"><span class="swatch" style="background:#cde7aa;border:1px solid #4d761a"></span>Reserva / Ação</span>
+                <span class="key"><span class="swatch" style="background:#ebf2fa;border:1px solid #234d7c"></span>Decisão</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CRIT -->
+        <div class="crit">
+          <div class="crit-head">
+            <h4 class="h-3">Verdicto do time</h4>
+            <span class="muted body-sm">Em ideação · votação top-3 da sessão</span>
+          </div>
+          <div class="crit-grid">
+            <div class="crit-card" data-verdict="yes" data-role="writer">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Cami</b> · UX Writer</span></div>
+              <p class="quote">"'Adicionei o endereço no evento do seu Calendar' é uma frase que parece mágica pra quem usa. Tom que precisa estar na confirmação."</p>
+            </div>
+            <div class="crit-card" data-verdict="watch" data-role="ui">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Rafa</b> · UX/UI</span></div>
+              <p class="quote">"O onboarding de permissões de Calendar é a UX mais crítica — uma tela mal feita aqui derruba toda a proposta. Dedicar um sprint só pra isso."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="service">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Júlia</b> · Service</span></div>
+              <p class="quote">"O cancelamento bidirecional fecha o loop. Mas o edge case de 'cancelou o Calendar mas não a Woba' (sem integração) precisa de fallback claro."</p>
+            </div>
+            <div class="crit-card" data-verdict="yes" data-role="product">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Dani</b> · Product</span></div>
+              <p class="quote">"'O Calendar é onde o trabalho mora. Brigar com isso é perder.' Maior esforço da lista, mas também a maior barreira de saída depois de adotado."</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ─────────── W-01 — AGENDA CIENTE DE BEM-ESTAR ─────────── -->
+      <article class="proposal">
+        <header class="proposal-head">
+          <div class="left">
+            <span class="stage" style="background:#ede1ff;color:#5d16c2;border-color:#a768ff"><span class="stage-dot" style="background:#a768ff"></span>Wildcard · em conversa · sem dono</span>
+            <h3 class="h-1 title">Você tem 5h de reunião. Bora respirar?</h3>
+            <p class="sub">
+              Sofia olha sua agenda do dia e, quando vê uma maratona de reuniões, sugere um intervalo de 15 min
+              entre elas. Bloqueia o slot, oferece café/água no coworking, ou simplesmente "fecha o WhatsApp e respira".
+              Não é reserva — é pausa. A proposta mais arriscada e mais humana do conjunto.
+            </p>
+          </div>
+          <span class="id">W-01 · bem-estar</span>
+        </header>
+
+        <div class="blocks">
+
+          <!-- COPY -->
+          <div class="block">
+            <div class="block-eyebrow">
+              <span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v3H4zM4 10h10v3H4zM4 16h13v3H4z"/></svg></span>
+              Copy
+            </div>
+            <div class="copy-list">
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · alerta de maratona · manhã</div>
+                <div class="txt">Oi! Vi que você tem <b>5h seguidas de reunião</b> hoje — até as 18h sem pausa.
+
+Quer que eu bloqueie 15 min no meio pra você respirar um pouco?</div>
+                <div class="note">Trigger: agenda com ≥ 4h de reuniões consecutivas sem gap ≥ 15 min. Condição: integração com Calendar ativa (depende de I-08). Horário do aviso: início do dia ou 1h antes do bloco. Tom: cuidado genuíno, não corporativo.</div>
+              </div>
+              <div class="copy-item" data-who="user">
+                <div class="who">Usuário</div>
+                <div class="txt">Sim, por favor</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · bloqueia slot</div>
+                <div class="txt">Pronto! Bloqueei <b>15 min às 14h</b> no seu Calendar — aparece como "⏸ Pausa" pra todo mundo.
+
+Se quiser um café nesse intervalo, o Tribbos tem área de convivência aberta pra quem tem reserva. ☕</div>
+                <div class="note">Cria evento de bloqueio no Calendar via API. Tom não-comercial: a oferta de café é genuína, não é upsell. Se usuário não tiver reserva no coworking no dia, omitir a oferta de café.</div>
+              </div>
+              <div class="copy-item" data-who="user">
+                <div class="who">Usuário · recusa</div>
+                <div class="txt">Não, tô bem</div>
+              </div>
+              <div class="copy-item" data-who="bot">
+                <div class="who">Sofia · resposta à recusa</div>
+                <div class="txt">Ok! 💛 Se mudar de ideia, é só falar.</div>
+                <div class="note">Não insistir. Não disparar novamente no mesmo dia. Frequência máxima do alerta: 1× por semana para o mesmo usuário.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CRIT -->
+        <div class="crit">
+          <div class="crit-head">
+            <h4 class="h-3">Verdicto do time</h4>
+            <span class="muted body-sm">Wildcard · precisa de validação com usuários</span>
+          </div>
+          <div class="crit-grid">
+            <div class="crit-card" data-verdict="yes" data-role="writer">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Cami</b> · UX Writer</span></div>
+              <p class="quote">"A primeira marca que manda 'para de trabalhar' conquista um lugar diferente na vida do usuário. Tom é tudo aqui — uma palavra errada e vira invasão."</p>
+            </div>
+            <div class="crit-card" data-verdict="watch" data-role="ui">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Rafa</b> · UX/UI</span></div>
+              <p class="quote">"Sem interface própria — só mensagem + ação no Calendar. Mas precisa de opt-in explícito ('quer que eu cuide da sua agenda?') antes de ativar."</p>
+            </div>
+            <div class="crit-card" data-verdict="watch" data-role="service">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Júlia</b> · Service</span></div>
+              <p class="quote">"Depende de I-08 (Calendar sync). Não construir em paralelo — sequenciar depois que Calendar sync estiver estável em produção."</p>
+            </div>
+            <div class="crit-card" data-verdict="watch" data-role="product">
+              <div class="hdr"><span class="dot"></span><span class="role"><b>Dani</b> · Product</span></div>
+              <p class="quote">"Não é produto ainda — é princípio. Testar com 50 usuários opt-in antes de escalar. A métrica é qualitativa: NPS e entrevistas, não conversão."</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ════════════════════════════ INTEGRAÇÕES E INFRA ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">4</span>
+        <h2 class="h-2">Infra e dependências</h2>
+      </div>
+      <p class="body" style="max-width:66ch;margin-top:-10px;margin-bottom:16px">
+        Rotinas compartilham um motor de padrões central. Construir as peças na ordem certa evita retrabalho.
+      </p>
+
+      <div class="horizon">
+        <table>
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Necessário para</th>
+              <th>Horizon</th>
+              <th>Obs.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Motor de padrões<br/><small style="font-weight:400;color:var(--ink-3)">histórico + matching</small></td>
+              <td>P-03, P-12, P-13</td>
+              <td><span class="pill pill-now">Agora</span></td>
+              <td>Regra determinística simples: mesma sala + mesmo dia + mesmo horário ±30 min × N reservas. Sem ML em V1.</td>
+            </tr>
+            <tr>
+              <td>Gerenciamento de séries<br/><small style="font-weight:400;color:var(--ink-3)">serie_id + status</small></td>
+              <td>P-03</td>
+              <td><span class="pill pill-now">Agora</span></td>
+              <td>Criar reservas em lote com série_id. Cancelar 1 ocorrência sem destruir a série. Encerramento forçado por data ou por usuário.</td>
+            </tr>
+            <tr>
+              <td>Cron de avisos<br/><small style="font-weight:400;color:var(--ink-3)">semanal + D+7</small></td>
+              <td>P-03, P-12</td>
+              <td><span class="pill pill-now">Agora</span></td>
+              <td>Dois jobs distintos: aviso véspera de série (P-03) e trigger de re-engajamento D+7 (P-12). Idempotência obrigatória.</td>
+            </tr>
+            <tr>
+              <td>Roles B2B<br/><small style="font-weight:400;color:var(--ink-3)">manager / admin</small></td>
+              <td>I-07</td>
+              <td><span class="pill pill-next">Próximo</span></td>
+              <td>Estrutura de permissões na conta corporativa. Bloqueador para sumário semanal. Pode reaproveitar estrutura de equipe já existente.</td>
+            </tr>
+            <tr>
+              <td>Calendar OAuth<br/><small style="font-weight:400;color:var(--ink-3)">Google + Outlook</small></td>
+              <td>I-08, W-01</td>
+              <td><span class="pill pill-next">Próximo</span></td>
+              <td>Permissão de leitura e escrita de eventos. Webhooks para criação/cancelamento. Onboarding de permissão é a UX mais crítica — sprint dedicado.</td>
+            </tr>
+            <tr>
+              <td>Opt-in de bem-estar<br/><small style="font-weight:400;color:var(--ink-3)">flag por usuário</small></td>
+              <td>W-01</td>
+              <td><span class="pill pill-future">Futuro</span></td>
+              <td>Depende de Calendar OAuth estável. Testar com 50 usuários antes de escalar. Sequenciar depois de I-08 em produção.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="deps">
+        <h5>Conexões entre cenários</h5>
+        <ul>
+          <li><b>P-03 → P-07</b>: quando um slot da série fica indisponível, motor de sala substituta é acionado automaticamente (48h de antecedência).</li>
+          <li><b>P-12 → P-00</b>: re-engagement que converte flui direto para flow padrão de reserva, com sala e horário pré-preenchidos do histórico.</li>
+          <li><b>P-13 → P-00</b>: atalho de "reservar de novo" abre P-00 com todos os campos já preenchidos — usuário só confirma.</li>
+          <li><b>I-08 → P-03</b>: Calendar sync pode atuar como fonte de detecção de padrão em paralelo ao histórico de reservas da Woba.</li>
+          <li><b>I-08 → W-01</b>: W-01 é dependente de Calendar sync estar ativo — não construir em paralelo.</li>
+          <li><b>P-03 + P-13</b>: usuário com série ativa não deve ver P-13 para a mesma sala/horário na saudação — evitar redundância.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ MÉTRICAS ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">5</span>
+        <h2 class="h-2">Métricas de sucesso</h2>
+      </div>
+      <p class="body" style="max-width:66ch;margin-top:-10px;margin-bottom:0">
+        Rotinas impacta diretamente retenção e LTV. Os indicadores abaixo são o contrato do time com o negócio.
+      </p>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="label">North star</div>
+          <div class="value">≥ 30%</div>
+          <div class="desc">de usuários ativos com ao menos 1 série recorrente ativa em 90 dias</div>
+        </div>
+        <div class="metric">
+          <div class="label">Retenção semanal</div>
+          <div class="value">+15%</div>
+          <div class="desc">taxa de reserva semanal em usuários com série ativa vs. sem série</div>
+        </div>
+        <div class="metric">
+          <div class="label">Re-engagement D+7</div>
+          <div class="value">≥ 25%</div>
+          <div class="desc">conversão do trigger D+7 em reserva confirmada na base recorrente</div>
+        </div>
+        <div class="metric">
+          <div class="label">Time-to-book (atalho)</div>
+          <div class="value">&lt; 30s</div>
+          <div class="desc">de saudação até reserva confirmada via P-13, medido em prod</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px" class="deps">
+        <h5>Guardrails — o que não pode acontecer</h5>
+        <ul>
+          <li><b>Spam percebido</b>: score de opt-out de mensagens da Sofia ≤ 2% (P-12, W-01).</li>
+          <li><b>Série fantasma</b>: % de séries com ≥ 2 ocorrências canceladas consecutivas sem cancelamento explícito da série ≤ 5%.</li>
+          <li><b>Notificação de re-engajamento pós-churn</b>: não disparar P-12 para usuários sem atividade há mais de 30 dias — encaminhar para CS.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ PERGUNTAS ABERTAS ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">6</span>
+        <h2 class="h-2">Perguntas abertas</h2>
+      </div>
+      <p class="body" style="max-width:66ch;margin-top:-10px;margin-bottom:0">
+        Decisões que o time precisa tomar antes de entrar em sprint.
+      </p>
+
+      <div class="oq-list">
+        <div class="oq">
+          <span class="num">1</span>
+          <p><b>Padrão com qual N?</b> A proposta usa N=3 reservas idênticas para disparar P-03. Esse threshold precisa de validação com dados reais — N muito baixo gera falsos positivos (2 coincidências), N muito alto atrasa o valor para o usuário recorrente.</p>
+        </div>
+        <div class="oq">
+          <span class="num">2</span>
+          <p><b>Série pré-criada ou sob demanda?</b> Criar N reservas no momento da confirmação da série garante o slot, mas ocupa inventário e pode bloquear outros usuários. Alternativa: reservar só a primeira e fazer rolling reservation semana a semana. Qual política de crédito em cada caso?</p>
+        </div>
+        <div class="oq">
+          <span class="num">3</span>
+          <p><b>Séries B2B têm aprovação do gestor?</b> Se um membro do time corporativo cria uma série recorrente, o gestor precisa aprovar ou é transparente? Define a arquitetura de permissões de I-07.</p>
+        </div>
+        <div class="oq">
+          <span class="num">4</span>
+          <p><b>Política de cancelamento em série:</b> "cancelar essa" remove a ocorrência mas mantém créditos comprometidos? Ou só os créditos da ocorrência cancelada voltam? Alinhamento com produto e financeiro necessário.</p>
+        </div>
+        <div class="oq">
+          <span class="num">5</span>
+          <p><b>Calendar sync: push ou pull?</b> Modelo push (webhook do Calendar chama a Woba) é mais responsivo mas exige infra de eventos. Modelo pull (Woba consulta Calendar periodicamente) é mais simples mas tem latência. Qual o custo de infra de cada abordagem?</p>
+        </div>
+        <div class="oq">
+          <span class="num">6</span>
+          <p><b>W-01 é produto Woba ou feature de bem-estar corporativo?</b> Se virar um "plano premium de agenda ciente", o pricing muda. Se for gratuito para todos com Calendar sync, o posicionamento é de diferenciação. Decisão de produto antes de construir.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ BACKLOG ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">7</span>
+        <h2 class="h-2">Próximos passos</h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+        <div style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px">
+          <div style="font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px">Sprint 1 · Agora</div>
+          <ul style="padding-left:18px;margin:0;font-size:13.5px;line-height:1.8;color:var(--ink-2)">
+            <li>Motor de padrões (regra determinística, N=3)</li>
+            <li>Gerenciamento de séries (serie_id, cancelar 1)</li>
+            <li>P-03 — crit formal + prototipação no simulador</li>
+            <li>P-13 — implementar atalho de saudação</li>
+          </ul>
+        </div>
+        <div style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px">
+          <div style="font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px">Sprint 2 · Próximo</div>
+          <ul style="padding-left:18px;margin:0;font-size:13.5px;line-height:1.8;color:var(--ink-2)">
+            <li>Cron D+7 re-engagement (P-12)</li>
+            <li>Guardrail anti-spam (máx 1×/sem)</li>
+            <li>Roles B2B (manager/admin) — bloqueador I-07</li>
+            <li>Sumário semanal gestor (I-07) em crit</li>
+          </ul>
+        </div>
+        <div style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px">
+          <div style="font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px">Sprint 3+ · Futuro</div>
+          <ul style="padding-left:18px;margin:0;font-size:13.5px;line-height:1.8;color:var(--ink-2)">
+            <li>Calendar OAuth (Google + Outlook) — sprint dedicado</li>
+            <li>I-08 Calendar sync bidirecional</li>
+            <li>W-01 opt-in bem-estar (50 usuários piloto)</li>
+            <li>Revisitar N do motor com dados reais de prod</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;background:var(--ink);color:#fff;border-radius:18px;padding:28px 32px">
+        <h3 style="margin:0 0 10px;font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-0.015em;color:#fff">Quick wins pra começar amanhã.</h3>
+        <p style="margin:0;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.75);max-width:62ch">
+          <b style="color:#f9e10d">P-13 (atalho de saudação)</b> e <b style="color:#f9e10d">P-12 (re-engagement D+7)</b> podem ser implementados com o histórico de reservas que já existe,
+          sem nenhuma infra nova. São os candidatos ideais para o primeiro sprint enquanto o motor de séries (P-03) é construído.
+          Ambos geram aprendizado imediato sobre comportamento do usuário recorrente — o insumo que vai calibrar o N do P-03.
+        </p>
+      </div>
+    </section>
+
+    <footer style="margin-top:56px;font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:20px">
+      <div>Woba · PRD Rotinas · maio/26</div>
+      <div>6 cenários · 3 prontos pra crit · 3 em ideação</div>
+    </footer>
+  </main>
+</body>
+</html>

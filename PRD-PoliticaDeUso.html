@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>PRD — Política de Uso · Sofia Woba Assist</title>
+  <link rel="stylesheet" href="styles/propostas.css"/>
+  <style>
+    /* ── Status badge ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11.5px; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; padding: 5px 12px; border-radius: 999px;
+    }
+    .badge.draft    { background: #fff3e7; color: #98540c; border: 1px solid #f4b470; }
+    .badge.ready    { background: #e9f3d6; color: #3a6514; border: 1px solid #90c44a; }
+    .badge.ideation { background: #ede1ff; color: #5d16c2; border: 1px solid #a768ff; }
+    .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    /* ── Touchpoint map ── */
+    .tp-map {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 860px) { .tp-map { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .tp-map { grid-template-columns: 1fr; } }
+
+    .tp-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 20px;
+      position: relative;
+    }
+    .tp-card .tid {
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+      color: var(--ink-4); margin-bottom: 10px; display: block;
+    }
+    .tp-card h4 { margin: 0 0 6px; font-family: var(--display); font-size: 15px; font-weight: 700; }
+    .tp-card p  { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+    .tp-card .badge { position: absolute; top: 16px; right: 16px; }
+    .tp-card .gap-tag {
+      display: inline-block; margin-top: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      background: #fff0f0; color: #c0392b; border: 1px solid #f5b7b1;
+      padding: 3px 9px; border-radius: 999px;
+    }
+    .tp-card .ok-tag {
+      display: inline-block; margin-top: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      background: #e9f3d6; color: #3a6514; border: 1px solid #90c44a;
+      padding: 3px 9px; border-radius: 999px;
+    }
+
+    /* ── Policy rule box ── */
+    .policy-rules {
+      margin-top: 28px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .policy-rules table {
+      width: 100%; border-collapse: collapse; font-size: 13.5px;
+    }
+    .policy-rules th {
+      background: var(--canvas); font-family: var(--display);
+      font-weight: 700; font-size: 11px; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--ink-3);
+      padding: 10px 18px; text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+    .policy-rules td {
+      padding: 11px 18px; border-bottom: 1px solid var(--line);
+      color: var(--ink-2); vertical-align: top; line-height: 1.45;
+    }
+    .policy-rules tr:last-child td { border-bottom: none; }
+    .policy-rules td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+    .pill-yes { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #e9f3d6; color: #3a6514; }
+    .pill-no  { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #fff0f0; color: #c0392b; }
+    .pill-cond { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #fff3e7; color: #98540c; }
+
+    /* ── Horizon table ── */
+    .horizon {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .horizon table {
+      width: 100%; border-collapse: collapse; font-size: 13.5px;
+    }
+    .horizon th {
+      background: var(--canvas); font-family: var(--display);
+      font-weight: 700; font-size: 11px; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--ink-3);
+      padding: 10px 18px; text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+    .horizon td {
+      padding: 11px 18px; border-bottom: 1px solid var(--line);
+      color: var(--ink-2); vertical-align: top; line-height: 1.45;
+    }
+    .horizon tr:last-child td { border-bottom: none; }
+    .horizon td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+    .horizon td .pill {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 999px; margin-right: 4px;
+    }
+    .pill-now    { background: #e9f3d6; color: #3a6514; }
+    .pill-next   { background: #fff3e7; color: #98540c; }
+    .pill-future { background: #ede1ff; color: #5d16c2; }
+
+    /* ── Infra deps box ── */
+    .deps {
+      margin-top: 16px;
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .deps h5 {
+      margin: 0 0 10px;
+      font-family: var(--display); font-weight: 700; font-size: 13px;
+      letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3);
+    }
+    .deps ul { margin: 0; padding-left: 20px; }
+    .deps li { font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+    .deps li b { color: var(--ink); }
+
+    /* ── Metrics strip ── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+    @media (max-width: 720px) { .metrics { grid-template-columns: 1fr 1fr; } }
+    .metric {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .metric .label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px;
+    }
+    .metric .value {
+      font-family: var(--display); font-weight: 800;
+      font-size: 28px; letter-spacing: -0.03em; color: var(--ink);
+      line-height: 1;
+    }
+    .metric .desc { font-size: 12px; color: var(--ink-3); margin-top: 6px; line-height: 1.4; }
+
+    /* ── Open questions ── */
+    .oq-list { margin-top: 16px; }
+    .oq {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    .oq .num {
+      font-family: var(--display); font-weight: 700; font-size: 13px;
+      background: var(--yellow); color: var(--yellow-fg);
+      width: 26px; height: 26px; border-radius: 7px;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .oq p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+    .oq p b { color: var(--ink); }
+
+    /* ── Mini phone adjustments ── */
+    .mini-phone { width: 140px; min-height: 260px; border-radius: 22px; border: 2px solid #222; background: #fff; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.13); }
+    .mini-bar { background: #075E54; padding: 8px 10px 6px; color: #fff; font-size: 8.5px; font-weight: 700; }
+    .mini-body { flex: 1; background: #ece5dd; padding: 8px 7px; display: flex; flex-direction: column; gap: 5px; }
+    .mini-bub { border-radius: 10px; padding: 5px 8px; font-size: 7.5px; line-height: 1.4; max-width: 88%; }
+    .mini-bub.bot { background: #fff; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .mini-bub.usr { background: #d9fdd3; align-self: flex-end; border-bottom-right-radius: 2px; }
+    .mini-bub b { font-weight: 700; }
+    .mini-card-sm { background: #fff; border-radius: 8px; padding: 5px 7px; margin-top: 2px; font-size: 7px; line-height: 1.4; color: #333; }
+    .mini-card-sm .credits { font-weight: 700; color: #075E54; }
+    .mini-sheet { background: #fff; border-radius: 12px 12px 0 0; margin: 0 -7px -8px; padding: 8px 8px 12px; font-size: 7px; line-height: 1.55; color: #333; }
+    .mini-sheet .sh-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 3px 0; }
+    .mini-sheet .sh-row:last-child { border-bottom: none; }
+    .mini-sheet .sh-row.total { font-weight: 700; }
+    .mini-sheet .sh-alert { background: #fff9e6; border: 1px solid #f4c44a; border-radius: 6px; padding: 4px 6px; margin: 4px 0; color: #7a5300; font-size: 7px; }
+    .mini-pill { display: inline-block; background: #e9f3d6; color: #3a6514; border-radius: 999px; padding: 1px 5px; font-size: 6.5px; font-weight: 700; margin-top: 2px; }
+    .mini-pill.warn { background: #fff3e7; color: #98540c; }
+  </style>
+</head>
+<body>
+  <main class="page">
+
+    <!-- ════════════════════════════ COVER ════════════════════════════ -->
+    <section class="cover">
+      <div class="cover-meta">
+        <span class="dot"></span><span>Woba · PRD de Produto</span>
+        <span style="color:var(--ink-4);font-weight:500">·</span>
+        <span style="color:var(--ink-4);font-weight:500">v0.1 · maio/26</span>
+      </div>
+      <h1 class="h-mega">Créditos sem<br/>letra miúda.</h1>
+      <p class="lede">
+        A política de uso da Woba — créditos por mês, devolução até 2h antes, acúmulo limitado a 50% — é
+        <b>simples</b>. O problema é que ela <b>não aparece</b> nos momentos em que o usuário mais precisa dela:
+        antes de reservar, na hora de cancelar, no checkout. Este PRD mapeia os cinco touchpoints onde a
+        política deve se tornar visível e propõe como a <b>Sofia</b> pode traduzir regras em confiança.
+      </p>
+      <div class="cover-side">
+        PRD<br/>
+        Sofia · Política de Uso<br/>
+        5 touchpoints
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ CONTEXTO ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">1</span>
+        <h2 class="h-2">O problema da política invisível</h2>
+      </div>
+      <p class="body" style="max-width:66ch;margin-top:-10px;margin-bottom:28px">
+        Créditos são a moeda central da Woba. Cada interação — busca, reserva, cancelamento, remarcação —
+        envolve créditos de alguma forma. Mas hoje o usuário descobre as regras <b>depois</b> que algo deu
+        errado: cancelou fora do prazo, perdeu créditos que não sabia que acumulariam, ficou em dúvida se
+        remarcar é diferente de cancelar e reservar de novo. Transparência proativa não é feature de suporte
+        — é fundação de confiança.
+      </p>
+
+      <!-- Regras da política -->
+      <h3 class="h-3" style="margin-bottom:12px">As regras que precisam aparecer</h3>
+      <div class="policy-rules">
+        <table>
+          <thead>
+            <tr>
+              <th>Evento</th>
+              <th>Crédito devolvido?</th>
+              <th>Regra</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cancelamento ≥ 2h antes</td>
+              <td><span class="pill-yes">✓ Sim</span></td>
+              <td>Devolução integral ao saldo do mês corrente</td>
+            </tr>
+            <tr>
+              <td>Cancelamento &lt; 2h antes</td>
+              <td><span class="pill-no">✗ Não</span></td>
+              <td>Crédito consumido; reserva encerrada</td>
+            </tr>
+            <tr>
+              <td>No-show (não compareceu)</td>
+              <td><span class="pill-no">✗ Não</span></td>
+              <td>Crédito consumido; sem devolução</td>
+            </tr>
+            <tr>
+              <td>Remarcação (P-18)</td>
+              <td><span class="pill-yes">✓ Mantido</span></td>
+              <td>Crédito transferido para nova data; sem desconto</td>
+            </tr>
+            <tr>
+              <td>Acúmulo mensal</td>
+              <td><span class="pill-cond">⚠ Parcial</span></td>
+              <td>Saldo restante acumula até 50% do valor do próximo mês</td>
+            </tr>
+            <tr>
+              <td>Cancelamento de ocorrência em série</td>
+              <td><span class="pill-yes">✓ Sim</span></td>
+              <td>Apenas a ocorrência cancelada devolve crédito; série continua</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="team-grid" style="margin-top:36px;margin-bottom:0">
+        <div class="persona" data-role="pm">
+          <div class="avatar">PM</div>
+          <div class="info">
+            <span class="role">Product</span>
+            <span class="name">Lucas Afranio</span>
+          </div>
+        </div>
+        <div class="persona" data-role="writer">
+          <div class="avatar" style="font-size:18px">✍️</div>
+          <div class="info">
+            <span class="role">UX Writer</span>
+            <span class="name">A definir</span>
+          </div>
+        </div>
+        <div class="persona" data-role="eng">
+          <div class="avatar" style="font-size:18px">⚙️</div>
+          <div class="info">
+            <span class="role">Engenharia</span>
+            <span class="name">A definir</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ MAPA DE TOUCHPOINTS ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">2</span>
+        <h2 class="h-2">Mapa de touchpoints</h2>
+      </div>
+      <p class="body" style="max-width:66ch;margin-top:-10px">
+        Cinco momentos na jornada de reserva onde a política de uso é relevante. Estado atual: a maioria
+        mostra créditos como número, sem contexto de regras.
+      </p>
+
+      <div class="tp-map">
+        <!-- T-01 -->
+        <div class="tp-card">
+          <span class="badge draft"><span class="dot"></span>Gap</span>
+          <span class="tid">T-01</span>
+          <h4>Listagem</h4>
+          <p>RoomCard e PillRoomCard mostram <code>{credits} créd.</code> mas sem indicação de política de devolução. Usuário não sabe antes de abrir a reserva se vai poder cancelar.</p>
+          <span class="gap-tag">Política não aparece</span>
+        </div>
+        <!-- T-02 -->
+        <div class="tp-card">
+          <span class="badge draft"><span class="dot"></span>Gap</span>
+          <span class="tid">T-02</span>
+          <h4>Card no chat</h4>
+          <p>Resultado de busca no chat (carousel, rich card) exibe créditos/hora. Nenhum sinal de cancelamento gratuito ou janela de devolução.</p>
+          <span class="gap-tag">Política não aparece</span>
+        </div>
+        <!-- T-03 -->
+        <div class="tp-card">
+          <span class="badge draft"><span class="dot"></span>Gap</span>
+          <span class="tid">T-03</span>
+          <h4>Checkout</h4>
+          <p>FlowSheet mostra sala, créditos e data/hora. "Saiba mais" no rodapé está morto. Sem aviso de prazo de cancelamento antes do CTA "Solicitar Reserva".</p>
+          <span class="gap-tag">CTA sem contexto</span>
+        </div>
+        <!-- T-04 -->
+        <div class="tp-card">
+          <span class="badge draft"><span class="dot"></span>Gap</span>
+          <span class="tid">T-04</span>
+          <h4>Detalhes da reserva</h4>
+          <p>P-16 mostra sala, horário e status de confirmação — mas não exibe créditos gastos, deadline de cancelamento com devolução nem saldo atual.</p>
+          <span class="gap-tag">Prazo de cancelamento oculto</span>
+        </div>
+        <!-- T-05 -->
+        <div class="tp-card">
+          <span class="badge ready"><span class="dot"></span>Referência</span>
+          <span class="tid">T-05</span>
+          <h4>Cancelamento / Remarcação</h4>
+          <p>P-17 e P-18 já mostram o padrão correto: regra de prazo aparece <b>antes</b> da confirmação, crédito devolvido ou mantido é destacado.</p>
+          <span class="ok-tag">Padrão de referência</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ PROPOSTAS ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">3</span>
+        <h2 class="h-2">Propostas por touchpoint</h2>
+      </div>
+
+      <!-- ─── T-01 + T-02: Listagem e Card ─── -->
+      <div class="proposal">
+        <div class="proposal-head">
+          <div class="proposal-id">T-01 · T-02</div>
+          <h3 class="proposal-title">Pill de política no card de sala</h3>
+          <span class="badge ready"><span class="dot"></span>Pronto para crit</span>
+        </div>
+
+        <div class="blocks">
+
+          <!-- COPY -->
+          <div class="block">
+            <div class="block-label">Copy</div>
+            <ul class="copy-list">
+              <li class="copy-item">
+                <div class="copy-label">Pill no RoomCard (listagem/carousel)</div>
+                <div class="copy-text">Cancelamento grátis até 2h antes</div>
+                <div class="copy-note">Microcopy abaixo do preço em créditos. Tom: factual, sem alarme.</div>
+              </li>
+              <li class="copy-item">
+                <div class="copy-label">FAQ quando usuário pergunta sobre créditos (P-15)</div>
+                <div class="copy-text">💳 Cada plano libera créditos por mês · ⏱️ Use em qualquer parceiro · 🔄 Sobrou? Acumula até 50% no mês seguinte · 📅 Cancelou até 2h antes? Crédito devolvido.</div>
+                <div class="copy-note">Resposta atual do P-15. Referência de tom — manter esse padrão nos demais touchpoints.</div>
+              </li>
+              <li class="copy-item">
+                <div class="copy-label">Tooltip/pop ao tocar na pill</div>
+                <div class="copy-text">Se cancelar com mais de 2h de antecedência, os créditos voltam pro seu saldo. Depois disso, não há devolução.</div>
+                <div class="copy-note">Explicação expandida, acionada sob demanda — não polui o card.</div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- FLUXO -->
+          <div class="block">
+            <div class="block-label">Fluxo</div>
+            <div class="flow-wrap">
+              <svg viewBox="0 0 540 160" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px">
+                <!-- nodes -->
+                <rect x="20" y="50" width="110" height="60" rx="10" fill="#f5f5f0" stroke="#ddd" stroke-width="1.5"/>
+                <text x="75" y="76" text-anchor="middle" font-size="10" fill="#333" font-weight="600">RoomCard</text>
+                <text x="75" y="91" text-anchor="middle" font-size="9" fill="#666">7 créd./h</text>
+                <text x="75" y="104" text-anchor="middle" font-size="8.5" fill="#3a6514" font-weight="700">cancelamento grátis</text>
+
+                <line x1="130" y1="80" x2="158" y2="80" stroke="#bbb" stroke-width="1.5" marker-end="url(#arr)"/>
+
+                <rect x="160" y="50" width="110" height="60" rx="10" fill="#f5f5f0" stroke="#ddd" stroke-width="1.5"/>
+                <text x="215" y="74" text-anchor="middle" font-size="10" fill="#333" font-weight="600">Toca na pill</text>
+                <text x="215" y="89" text-anchor="middle" font-size="9" fill="#666">tooltip expande</text>
+                <text x="215" y="104" text-anchor="middle" font-size="8.5" fill="#666">regra explicada</text>
+
+                <line x1="270" y1="80" x2="298" y2="80" stroke="#bbb" stroke-width="1.5" marker-end="url(#arr)"/>
+
+                <rect x="300" y="50" width="110" height="60" rx="10" fill="#f5f5f0" stroke="#ddd" stroke-width="1.5"/>
+                <text x="355" y="74" text-anchor="middle" font-size="10" fill="#333" font-weight="600">Segue p/ checkout</text>
+                <text x="355" y="89" text-anchor="middle" font-size="9" fill="#666">já informado,</text>
+                <text x="355" y="104" text-anchor="middle" font-size="9" fill="#666">sem surpresas</text>
+
+                <line x1="410" y1="80" x2="438" y2="80" stroke="#bbb" stroke-width="1.5" marker-end="url(#arr)"/>
+
+                <rect x="440" y="56" width="80" height="48" rx="10" fill="#e9f3d6" stroke="#90c44a" stroke-width="1.5"/>
+                <text x="480" y="78" text-anchor="middle" font-size="10" fill="#3a6514" font-weight="700">Confiança</text>
+                <text x="480" y="94" text-anchor="middle" font-size="9" fill="#3a6514">estabelecida</text>
+
+                <defs>
+                  <marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                    <path d="M0 0 L7 3.5 L0 7 z" fill="#bbb"/>
+                  </marker>
+                </defs>
+              </svg>
+            </div>
+          </div>
+
+          <!-- ESBOÇO -->
+          <div class="block">
+            <div class="block-label">Esboço</div>
+            <div class="sketch">
+              <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+                <!-- Card com pill -->
+                <div class="mini-phone">
+                  <div class="mini-bar">Sofia · Woba Assist</div>
+                  <div class="mini-body">
+                    <div class="mini-bub bot">Achei 3 opções perto de você 🗺️</div>
+                    <div class="mini-card-sm">
+                      <div style="font-weight:700;font-size:7.5px">Tribbos · 4p</div>
+                      <div class="credits">7 créd./h</div>
+                      <div><span class="mini-pill">✓ cancelamento grátis até 2h antes</span></div>
+                    </div>
+                    <div class="mini-card-sm">
+                      <div style="font-weight:700;font-size:7.5px">Vila Cowork · 6p</div>
+                      <div class="credits">8,5 créd./h</div>
+                      <div><span class="mini-pill">✓ cancelamento grátis até 2h antes</span></div>
+                    </div>
+                    <div class="mini-bub usr">Quero o Tribbos</div>
+                  </div>
+                </div>
+                <!-- Tooltip expandido -->
+                <div class="mini-phone">
+                  <div class="mini-bar">Sofia · Woba Assist</div>
+                  <div class="mini-body">
+                    <div class="mini-card-sm" style="border:1px solid #90c44a">
+                      <div style="font-weight:700;font-size:7.5px">Tribbos · 4p</div>
+                      <div class="credits">7 créd./h</div>
+                      <div><span class="mini-pill">✓ cancelamento grátis até 2h antes</span></div>
+                      <div style="margin-top:4px;background:#f0fff4;border-radius:5px;padding:4px 5px;font-size:6.5px;color:#3a6514;line-height:1.4">
+                        Cancelando com mais de 2h de antecedência os créditos voltam pro seu saldo. Depois disso, não há devolução.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CRIT -->
+          <div class="block">
+            <div class="block-label">Análise crítica</div>
+            <div class="crit">
+              <div class="crit-grid">
+                <div class="crit-card pro">
+                  <div class="crit-label">A favor</div>
+                  <p>Política visível <b>antes</b> do compromisso — reduz arrependimento e dúvidas no pós-reserva.</p>
+                </div>
+                <div class="crit-card pro">
+                  <div class="crit-label">A favor</div>
+                  <p>Pill de cancelamento grátis atua como <b>gatilho de conversão</b>: remove objeção de risco.</p>
+                </div>
+                <div class="crit-card con">
+                  <div class="crit-label">Atenção</div>
+                  <p>Card já é denso (nome, capacidade, endereço, créditos). Avaliar se pill ou icon-only suficiente para não poluir.</p>
+                </div>
+                <div class="crit-card con">
+                  <div class="crit-label">Atenção</div>
+                  <p>Tooltip em chat (WhatsApp) é limitação técnica — no Web/App funciona; no canal nativo, substituir por resposta contextual da Sofia.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── T-03: Checkout ─── -->
+      <div class="proposal">
+        <div class="proposal-head">
+          <div class="proposal-id">T-03</div>
+          <h3 class="proposal-title">Aviso de prazo no checkout</h3>
+          <span class="badge ready"><span class="dot"></span>Pronto para crit</span>
+        </div>
+
+        <div class="blocks">
+
+          <!-- COPY -->
+          <div class="block">
+            <div class="block-label">Copy</div>
+            <ul class="copy-list">
+              <li class="copy-item">
+                <div class="copy-label">Linha de política no FlowSheet (acima do CTA)</div>
+                <div class="copy-text">Cancelamento gratuito até [DATA] às [HORA-2H] · Depois disso, sem devolução.</div>
+                <div class="copy-note">Data e hora calculadas a partir do horário da reserva menos 2h. Concreto, não abstrato.</div>
+              </li>
+              <li class="copy-item">
+                <div class="copy-label">Linha de saldo após reserva</div>
+                <div class="copy-text">Após confirmar: seu saldo vai de [X] para [X-créditos] créd.</div>
+                <div class="copy-note">Transparência de débito. Usuário sabe o que vai gastar antes de tocar em "Solicitar Reserva".</div>
+              </li>
+              <li class="copy-item">
+                <div class="copy-label">"Saiba mais" no rodapé (atualmente morto)</div>
+                <div class="copy-text">Ativa FAQ de créditos (P-15) inline no chat — evita navegação para fora.</div>
+                <div class="copy-note">Link deve disparar cenário P-15 ou abrir InfoCard com resumo das regras, não abrir browser externo.</div>
+              </li>
+              <li class="copy-item">
+                <div class="copy-label">CTA</div>
+                <div class="copy-text">Solicitar Reserva · [X] créd.</div>
+                <div class="copy-note">Crédito no botão confirma o custo no momento da ação. Padrão existente no P-17 (cancelar).</div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- FLUXO -->
+          <div class="block">
+            <div class="block-label">Fluxo</div>
+            <div class="flow-wrap">
+              <svg viewBox="0 0 580 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:580px">
+                <rect x="10" y="70" width="100" height="60" rx="10" fill="#f5f5f0" stroke="#ddd" stroke-width="1.5"/>
+                <text x="60" y="96" text-anchor="middle" font-size="10" fill="#333" font-weight="600">Usuário toca</text>
+                <text x="60" y="111" text-anchor="middle" font-size="9" fill="#666">no card da sala</text>
+
+                <line x1="110" y1="100" x2="138" y2="100" stroke="#bbb" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+                <rect x="140" y="50" width="120" height="100" rx="10" fill="#f5f5f0" stroke="#ddd" stroke-width="1.5"/>
+                <text x="200" y="74" text-anchor="middle" font-size="10" fill="#333" font-weight="600">FlowSheet abre</text>
+                <text x="200" y="89" text-anchor="middle" font-size="8.5" fill="#666">sala + créditos + data</text>
+                <text x="200" y="104" text-anchor="middle" font-size="8" fill="#3a6514" font-weight="600">⚠ Cancel. grátis até [hora]</text>
+                <text x="200" y="118" text-anchor="middle" font-size="8" fill="#666">Saldo: X → X-créd.</text>
+                <text x="200" y="133" text-anchor="middle" font-size="8.5" fill="#333" font-weight="700">[Solicitar Reserva]</text>
+
+                <line x1="260" y1="100" x2="288" y2="100" stroke="#bbb" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+                <!-- bifurcação -->
+                <line x1="340" y1="100" x2="340" y2="55" stroke="#bbb" stroke-width="1.2"/>
+                <line x1="340" y1="100" x2="340" y2="145" stroke="#bbb" stroke-width="1.2"/>
+
+                <rect x="290" y="30" width="100" height="50" rx="10" fill="#e9f3d6" stroke="#90c44a" stroke-width="1.5"/>
+                <text x="340" y="52" text-anchor="middle" font-size="9.5" fill="#3a6514" font-weight="700">Confirma</text>
+                <text x="340" y="67" text-anchor="middle" font-size="8.5" fill="#3a6514">créditos debitados</text>
+
+                <rect x="290" y="120" width="100" height="50" rx="10" fill="#fff3e7" stroke="#f4b470" stroke-width="1.5"/>
+                <text x="340" y="142" text-anchor="middle" font-size="9.5" fill="#98540c" font-weight="700">Toca "Saiba mais"</text>
+                <text x="340" y="157" text-anchor="middle" font-size="8.5" fill="#98540c">FAQ de créditos</text>
+
+                <line x1="390" y1="55" x2="418" y2="55" stroke="#bbb" stroke-width="1.2" marker-end="url(#arr2)"/>
+                <rect x="420" y="30" width="120" height="50" rx="10" fill="#ede1ff" stroke="#a768ff" stroke-width="1.5"/>
+                <text x="480" y="52" text-anchor="middle" font-size="9.5" fill="#5d16c2" font-weight="700">Confirmação</text>
+                <text x="480" y="67" text-anchor="middle" font-size="8.5" fill="#5d16c2">Reservado! · P-09 flow</text>
+
+                <defs>
+                  <marker id="arr2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                    <path d="M0 0 L7 3.5 L0 7 z" fill="#bbb"/>
+                  </marker>
+                </defs>
+              </svg>
+            </div>
+          </div>
+
+          <!-- ESBOÇO -->
+          <div class="block">
+            <div class="block-label">Esboço</div>
+            <div class="sketch">
+              <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+                <!-- Checkout atual (gap) -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                  <span style="font-size:10px;color:#c0392b;font-weight:700">Atual (gap)</span>
+                  <div class="mini-phone">
+                    <div class="mini-bar">Sofia · Woba Assist</div>
+                    <div class="mini-body" style="padding:0">
+                      <div class="mini-sheet">
+                        <div style="font-weight:700;font-size:8px;margin-bottom:4px">Tribbos Paulista</div>
+                        <div class="sh-row"><span>Sala</span><span>Meeting Flex</span></div>
+                        <div class="sh-row total"><span>Créditos</span><span>7 créd.</span></div>
+                        <div class="sh-row"><span>Data</span><span>17/05 · 10h</span></div>
+                        <div style="margin-top:6px;background:#075E54;color:#fff;text-align:center;border-radius:6px;padding:4px;font-size:7.5px;font-weight:700">Solicitar Reserva</div>
+                        <div style="text-align:center;margin-top:4px;font-size:6.5px;color:#999">Gerenciada por Woba Assist · Saiba mais</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Checkout proposto -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                  <span style="font-size:10px;color:#3a6514;font-weight:700">Proposto</span>
+                  <div class="mini-phone">
+                    <div class="mini-bar">Sofia · Woba Assist</div>
+                    <div class="mini-body" style="padding:0">
+                      <div class="mini-sheet">
+                        <div style="font-weight:700;font-size:8px;margin-bottom:4px">Tribbos Paulista</div>
+                        <div class="sh-row"><span>Sala</span><span>Meeting Flex</span></div>
+                        <div class="sh-row total"><span>Créditos</span><span>7 créd.</span></div>
+                        <div class="sh-row"><span>Data</span><span>17/05 · 10h</span></div>
+                        <div class="sh-row"><span>Saldo após</span><span style="color:#98540c">93 → 86 créd.</span></div>
+                        <div class="sh-alert">✓ Cancel. grátis até 17/05 às 08h. Depois sem devolução.</div>
+                        <div style="margin-top:4px;background:#075E54;color:#fff;text-align:center;border-radius:6px;padding:4px;font-size:7.5px;font-weight:700">Solicitar Reserva · 7 créd.</div>
+                        <div style="text-align:center;margin-top:4px;font-size:6.5px;color:#075E54;text-decoration:underline">Saiba mais sobre créditos</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CRIT -->
+          <div class="block">
+            <div class="block-label">Análise crítica</div>
+            <div class="crit">
+              <div class="crit-grid">
+                <div class="crit-card pro">
+                  <div class="crit-label">A favor</div>
+                  <p>Alinha com o padrão já validado em P-17 (cancelar): <b>regra de prazo aparece antes da confirmação</b>, sem letra miúda.</p>
+                </div>
+                <div class="crit-card pro">
+                  <div class="crit-label">A favor</div>
+                  <p>"Saldo após reserva" resolve dúvida recorrente de suporte: <b>quanto vou gastar?</b> Resposta visível antes do toque.</p>
+                </div>
+                <div class="crit-card con">
+                  <div class="crit-label">Atenção</div>
+                  <p>FlowSheet precisa de API de saldo em tempo real. Se a chamada falhar, exibir <b>"saldo atualizado após confirmação"</b> como fallback.</p>
+                </div>
+                <div class="crit-card con">
+                  <div class="crit-label">Atenção</div>
+                  <p>Para crossell (W-02), o total muda quando usuário marca o add-on. Aviso de cancelamento deve atualizar junto — ou remover o aviso de prazo do estado com add-on (política diferente?).</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── T-04: Detalhes da reserva ─── -->
+      <div class="proposal">
+        <div class="proposal-head">
+          <div class="proposal-id">T-04</div>
+          <h3 class="proposal-title">Deadline de cancelamento na tela de detalhes</h3>
+          <span class="badge draft"><span class="dot"></span>Rascunho</span>
+        </div>
+
+        <div class="blocks">
+
+          <!-- COPY -->
+          <div class="block">
+            <div class="block-label">Copy</div>
+            <ul class="copy-list">
+              <li class="copy-item">
+                <div class="copy-label">Quando prazo ainda não venceu</div>
+                <div class="copy-text">✓ Cancelamento grátis até [DATA] às [HORA-2H] · Créditos voltam pro seu saldo.</div>
+                <div class="copy-note">Verde. Tranquiliza o usuário de que ainda tem a opção aberta.</div>
+              </li>
+              <li class="copy-item">
+                <div class="copy-label">Quando prazo já venceu (menos de 2h para a reserva)</div>
+                <div class="copy-text">⚠ Prazo de cancelamento encerrado · Créditos não serão devolvidos se cancelar agora.</div>
+                <div class="copy-note">Âmbar. Não esconde a realidade — mas tom empático, não punitivo.</div>
+              </li>
+              <li class="copy-item">
+                <div class="copy-label">Linha de créditos consumidos</div>
+                <div class="copy-text">7 créd. reservados · Saldo atual: 86 créd.</div>
+                <div class="copy-note">Fecha o loop: quanto foi gasto + quanto resta. Evita ligação ao suporte.</div>
+              </li>
+              <li class="copy-item">
+                <div class="copy-label">CTA Remarcar (quando disponível)</div>
+                <div class="copy-text">Remarcar reserva → créditos mantidos, sem custo extra.</div>
+                <div class="copy-note">Diferencia remarcação de cancelar+reservar-de-novo — reduz medo de perder crédito ao mudar de data.</div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- FLUXO -->
+          <div class="block">
+            <div class="block-label">Fluxo</div>
+            <div class="flow-wrap">
+              <svg viewBox="0 0 520 180" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px">
+                <rect x="10" y="60" width="110" height="60" rx="10" fill="#f5f5f0" stroke="#ddd" stroke-width="1.5"/>
+                <text x="65" y="84" text-anchor="middle" font-size="10" fill="#333" font-weight="600">P-16: "minhas</text>
+                <text x="65" y="99" text-anchor="middle" font-size="10" fill="#333" font-weight="600">reservas"</text>
+                <text x="65" y="113" text-anchor="middle" font-size="8.5" fill="#666">lista de reservas ativas</text>
+
+                <line x1="120" y1="90" x2="148" y2="90" stroke="#bbb" stroke-width="1.5" marker-end="url(#arr3)"/>
+
+                <rect x="150" y="40" width="120" height="100" rx="10" fill="#f5f5f0" stroke="#ddd" stroke-width="1.5"/>
+                <text x="210" y="64" text-anchor="middle" font-size="10" fill="#333" font-weight="600">Detalhe da reserva</text>
+                <text x="210" y="79" text-anchor="middle" font-size="8" fill="#666">sala + data + status</text>
+                <text x="210" y="94" text-anchor="middle" font-size="8" fill="#3a6514" font-weight="600">✓ cancel. grátis até [hora]</text>
+                <text x="210" y="109" text-anchor="middle" font-size="8" fill="#666">7 créd. · saldo: 86</text>
+                <text x="210" y="124" text-anchor="middle" font-size="8" fill="#555">[Cancelar] [Remarcar]</text>
+
+                <line x1="270" y1="70" x2="298" y2="55" stroke="#bbb" stroke-width="1.2" marker-end="url(#arr3)"/>
+                <line x1="270" y1="110" x2="298" y2="125" stroke="#bbb" stroke-width="1.2" marker-end="url(#arr3)"/>
+
+                <rect x="300" y="30" width="100" height="50" rx="10" fill="#e9f3d6" stroke="#90c44a" stroke-width="1.5"/>
+                <text x="350" y="52" text-anchor="middle" font-size="9.5" fill="#3a6514" font-weight="700">Cancela</text>
+                <text x="350" y="67" text-anchor="middle" font-size="8.5" fill="#3a6514">créditos devolvidos → P-17</text>
+
+                <rect x="300" y="110" width="100" height="50" rx="10" fill="#fff3e7" stroke="#f4b470" stroke-width="1.5"/>
+                <text x="350" y="132" text-anchor="middle" font-size="9.5" fill="#98540c" font-weight="700">Remarca</text>
+                <text x="350" y="147" text-anchor="middle" font-size="8.5" fill="#98540c">créditos mantidos → P-18</text>
+
+                <defs>
+                  <marker id="arr3" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                    <path d="M0 0 L7 3.5 L0 7 z" fill="#bbb"/>
+                  </marker>
+                </defs>
+              </svg>
+            </div>
+          </div>
+
+          <!-- ESBOÇO -->
+          <div class="block">
+            <div class="block-label">Esboço</div>
+            <div class="sketch">
+              <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+                <!-- Prazo aberto -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                  <span style="font-size:10px;color:#3a6514;font-weight:700">Prazo aberto</span>
+                  <div class="mini-phone">
+                    <div class="mini-bar">Sofia · Woba Assist</div>
+                    <div class="mini-body">
+                      <div class="mini-bub bot">Sua reserva de amanhã 📋</div>
+                      <div class="mini-card-sm">
+                        <div style="font-weight:700;font-size:7.5px">Tribbos Paulista</div>
+                        <div style="font-size:6.5px;color:#555">17/05 · 10h–12h · 4 pessoas</div>
+                        <div style="font-size:6.5px;color:#555;margin-top:2px">7 créd. · saldo: 86 créd.</div>
+                        <div style="margin-top:3px;background:#f0fff4;border:1px solid #90c44a;border-radius:5px;padding:3px 5px;font-size:6.5px;color:#3a6514">✓ Cancelamento grátis até 17/05 às 08h</div>
+                      </div>
+                      <div style="display:flex;gap:5px;margin-top:2px">
+                        <div style="flex:1;background:#fff0f0;border:1px solid #f5b7b1;border-radius:6px;text-align:center;padding:4px;font-size:7px;color:#c0392b;font-weight:700">Cancelar</div>
+                        <div style="flex:1;background:#e9f3d6;border:1px solid #90c44a;border-radius:6px;text-align:center;padding:4px;font-size:7px;color:#3a6514;font-weight:700">Remarcar</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Prazo vencido -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                  <span style="font-size:10px;color:#98540c;font-weight:700">Prazo vencido</span>
+                  <div class="mini-phone">
+                    <div class="mini-bar">Sofia · Woba Assist</div>
+                    <div class="mini-body">
+                      <div class="mini-bub bot">Sua reserva de hoje 📋</div>
+                      <div class="mini-card-sm">
+                        <div style="font-weight:700;font-size:7.5px">Tribbos Paulista</div>
+                        <div style="font-size:6.5px;color:#555">17/05 · 10h–12h · 4 pessoas</div>
+                        <div style="font-size:6.5px;color:#555;margin-top:2px">7 créd. · saldo: 86 créd.</div>
+                        <div style="margin-top:3px;background:#fff9e6;border:1px solid #f4c44a;border-radius:5px;padding:3px 5px;font-size:6.5px;color:#7a5300">⚠ Prazo encerrado · créditos não serão devolvidos</div>
+                      </div>
+                      <div style="display:flex;gap:5px;margin-top:2px">
+                        <div style="flex:1;background:#f5f5f5;border:1px solid #ddd;border-radius:6px;text-align:center;padding:4px;font-size:7px;color:#999;font-weight:700">Cancelar</div>
+                        <div style="flex:1;background:#e9f3d6;border:1px solid #90c44a;border-radius:6px;text-align:center;padding:4px;font-size:7px;color:#3a6514;font-weight:700">Remarcar</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CRIT -->
+          <div class="block">
+            <div class="block-label">Análise crítica</div>
+            <div class="crit">
+              <div class="crit-grid">
+                <div class="crit-card pro">
+                  <div class="crit-label">A favor</div>
+                  <p>Deadline concreto ("até 17/05 às 08h") é <b>mais acionável</b> que "até 2h antes" abstrato — reduz cálculo mental do usuário.</p>
+                </div>
+                <div class="crit-card pro">
+                  <div class="crit-label">A favor</div>
+                  <p>Diferenciar visualmente <b>Remarcar</b> vs <b>Cancelar</b> reduz o medo de perder créditos ao mudar de data — um bloqueio comum.</p>
+                </div>
+                <div class="crit-card con">
+                  <div class="crit-label">Atenção</div>
+                  <p>Quando prazo venceu: desabilitar "Cancelar" ou apenas alertar? Desabilitar reduz UX mas evita erro. <b>Decisão de negócio</b>: aceitar cancelamentos tardios?</p>
+                </div>
+                <div class="crit-card con">
+                  <div class="crit-label">Atenção</div>
+                  <p>Reservas em série (Rotinas): detalhe deve indicar se é ocorrência única ou parte de série, e se o cancelamento cancela <b>só essa</b> ou todas.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── T-05 (referência): Cancelamento e Remarcação ─── -->
+      <div class="proposal">
+        <div class="proposal-head">
+          <div class="proposal-id">T-05 · Referência</div>
+          <h3 class="proposal-title">P-17 e P-18 como padrão de ouro</h3>
+          <span class="badge ready"><span class="dot"></span>Validado no simulador</span>
+        </div>
+
+        <div class="blocks">
+          <div class="block">
+            <div class="block-label">Por que é referência</div>
+            <ul class="copy-list">
+              <li class="copy-item">
+                <div class="copy-label">P-17 — Cancelar (com devolução)</div>
+                <div class="copy-text">Cancelando agora você recebe os 14 créditos de volta (ainda tá no prazo). Quer continuar?</div>
+                <div class="copy-note">Regra de prazo aparece ANTES da confirmação. Crédito devolvido é o número exato, não percentual abstrato. Tom: empoderador ("você recebe de volta").</div>
+              </li>
+              <li class="copy-item">
+                <div class="copy-label">P-18 — Remarcar (créditos mantidos)</div>
+                <div class="copy-text">Seus 14 créditos ficam mantidos · Só escolha a nova data e horário.</div>
+                <div class="copy-note">Elimina a ansiedade de "vou perder créditos se remarcar". Crédito como linha de status, não como alerta.</div>
+              </li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-label">Princípio derivado</div>
+            <div class="crit">
+              <div class="crit-grid">
+                <div class="crit-card pro">
+                  <div class="crit-label">Regra de design</div>
+                  <p><b>Crédito aparece como número concreto</b>, nunca como "seus créditos". Ex: "14 créditos", não "seus créditos".</p>
+                </div>
+                <div class="crit-card pro">
+                  <div class="crit-label">Regra de design</div>
+                  <p>Política de devolução aparece <b>no momento da ação</b>, não só nas configurações ou FAQ. Contexto > documentação.</p>
+                </div>
+                <div class="crit-card pro">
+                  <div class="crit-label">Regra de design</div>
+                  <p>Tom de <b>consequência positiva primeiro</b>: "você recebe de volta" — não "atenção: créditos são devolvidos se...".</p>
+                </div>
+                <div class="crit-card pro">
+                  <div class="crit-label">Regra de design</div>
+                  <p>Remarcação sempre apresentada como <b>alternativa preferencial</b> ao cancelamento, com custo zero explícito.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ════════════════════════════ INFRA ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">4</span>
+        <h2 class="h-2">Infra e dependências</h2>
+      </div>
+
+      <div class="deps">
+        <h5>APIs necessárias</h5>
+        <ul>
+          <li><b>GET /user/credits/balance</b> — saldo atual para exibir "X → X-créd." no checkout e detalhes da reserva.</li>
+          <li><b>GET /booking/:id/cancellation-deadline</b> — retorna datetime exato do prazo de cancelamento com devolução para a reserva específica.</li>
+          <li><b>GET /booking/:id</b> — detalhes completos incluindo créditos consumidos e status atual.</li>
+        </ul>
+      </div>
+
+      <div class="horizon">
+        <table>
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Mudança necessária</th>
+              <th>Horizonte</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>RoomCard / PillRoomCard</td>
+              <td>Adicionar pill "cancelamento grátis até 2h antes" abaixo do preço em créditos. Componente de tooltip opcional.</td>
+              <td><span class="pill pill-now">Agora</span></td>
+            </tr>
+            <tr>
+              <td>FlowSheet (checkout)</td>
+              <td>Linha "Saldo após reserva" + linha de prazo de cancelamento calculado + "Saiba mais" disparando P-15 inline. Crédito no texto do CTA.</td>
+              <td><span class="pill pill-now">Agora</span></td>
+            </tr>
+            <tr>
+              <td>P-16 (detalhes da reserva)</td>
+              <td>InfoCard com créditos consumidos + deadline de cancelamento com status condicional (verde/âmbar). CTAs Cancelar e Remarcar lado a lado.</td>
+              <td><span class="pill pill-now">Agora</span></td>
+            </tr>
+            <tr>
+              <td>API de saldo em tempo real</td>
+              <td>Endpoint GET /user/credits/balance com cache curto (30s). Fallback: omitir linha "saldo após" sem quebrar o FlowSheet.</td>
+              <td><span class="pill pill-next">Próximo</span></td>
+            </tr>
+            <tr>
+              <td>API de cancellation-deadline</td>
+              <td>Endpoint retornando datetime calculado (booking.start_at - 2h). Necessário para exibir hora exata no detalhe da reserva.</td>
+              <td><span class="pill pill-next">Próximo</span></td>
+            </tr>
+            <tr>
+              <td>Notificação proativa de prazo</td>
+              <td>Push/mensagem Sofia 3h antes da reserva: "Você tem até [hora] para cancelar com devolução." Integração com scheduler de notificações.</td>
+              <td><span class="pill pill-future">Futuro</span></td>
+            </tr>
+            <tr>
+              <td>Crossell (W-02) + política</td>
+              <td>Quando add-on é marcado no ScenarioSheet, verificar se política de cancelamento é a mesma para o add-on — atualizar aviso ou suprimir se diferente.</td>
+              <td><span class="pill pill-future">Futuro</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ MÉTRICAS ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">5</span>
+        <h2 class="h-2">Métricas de sucesso</h2>
+      </div>
+      <p class="body" style="max-width:66ch;margin-top:-10px">
+        Política de uso visível deve reduzir atritos de cancelamento não-intencional e tickets de suporte
+        sobre créditos. Baseline a medir antes do lançamento.
+      </p>
+      <div class="metrics">
+        <div class="metric">
+          <div class="label">Tickets crédito</div>
+          <div class="value">−40%</div>
+          <div class="desc">Meta de redução em tickets de suporte sobre "onde foi meu crédito" em 90 dias.</div>
+        </div>
+        <div class="metric">
+          <div class="label">Cancel. indevido</div>
+          <div class="value">−25%</div>
+          <div class="desc">Cancelamentos fora do prazo (sem devolução) que poderiam ter sido remarcações.</div>
+        </div>
+        <div class="metric">
+          <div class="label">Remarcar/Cancelar</div>
+          <div class="value">↑ 2×</div>
+          <div class="desc">Razão de remarcações vs cancelamentos — indicador de compreensão da política.</div>
+        </div>
+        <div class="metric">
+          <div class="label">Checkout → Reserva</div>
+          <div class="value">+5pp</div>
+          <div class="desc">Taxa de conversão no FlowSheet após adicionar aviso de prazo e saldo projetado.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ PERGUNTAS ABERTAS ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">6</span>
+        <h2 class="h-2">Perguntas abertas</h2>
+      </div>
+      <div class="oq-list">
+        <div class="oq">
+          <span class="num">1</span>
+          <p>
+            <b>Cancelamento tardio: aceitar ou bloquear?</b> — Se o prazo venceu, o usuário ainda pode cancelar (perdendo o crédito) ou o botão é desabilitado? Decisão afeta o design de estado "prazo vencido" e a regra de negócio da API.
+          </p>
+        </div>
+        <div class="oq">
+          <span class="num">2</span>
+          <p>
+            <b>Add-on (W-02) tem política diferente?</b> — Quando o usuário adiciona um serviço no crossell do checkout, a política de cancelamento é a mesma do espaço? O aviso de prazo deve cobrir o pacote todo ou separar espaço e add-on?
+          </p>
+        </div>
+        <div class="oq">
+          <span class="num">3</span>
+          <p>
+            <b>Acúmulo de crédito: quando avisar?</b> — O limite de 50% de acúmulo deve aparecer na listagem ("você tem 140 créd. acumulados, limite de 150") ou só no extrato? Risco de criar ansiedade desnecessária vs. transparência.
+          </p>
+        </div>
+        <div class="oq">
+          <span class="num">4</span>
+          <p>
+            <b>Canal WhatsApp nativo vs. Web/App</b> — Tooltip no card funciona no simulador web mas não no WhatsApp puro. Qual a estratégia de paridade? Substituir tooltip por resposta contextual da Sofia ("Quer saber mais sobre a política de créditos?")?
+          </p>
+        </div>
+        <div class="oq">
+          <span class="num">5</span>
+          <p>
+            <b>Séries (Rotinas) + política</b> — Cancelar uma ocorrência de uma rotina devolve crédito normalmente? Cancelar toda a série devolve o crédito da próxima ocorrência ou de todas? A política de detalhes da reserva precisa de um modo "série".
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════ PRÓXIMOS PASSOS ════════════════════════════ -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">7</span>
+        <h2 class="h-2">Próximos passos</h2>
+      </div>
+      <div class="horizon">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Ação</th>
+              <th>Responsável</th>
+              <th>Prazo sugerido</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Decisão sobre cancelamento tardio (aceitar ou bloquear) — alinha UX e regra de negócio de uma vez.</td>
+              <td>PM + Negócio</td>
+              <td><span class="pill pill-now">Semana 1</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Adicionar pill de "cancelamento grátis" nos componentes RoomCard e PillRoomCard no simulador. Validar com crit interno.</td>
+              <td>Frontend</td>
+              <td><span class="pill pill-now">Semana 1</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Atualizar FlowSheet: linha de saldo projetado + aviso de prazo de cancelamento calculado. "Saiba mais" disparando P-15.</td>
+              <td>Frontend</td>
+              <td><span class="pill pill-now">Semana 2</span></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Redesenhar cenário P-16 (detalhes da reserva) com créditos + deadline + CTAs Cancelar/Remarcar lado a lado.</td>
+              <td>PM + Design</td>
+              <td><span class="pill pill-now">Semana 2</span></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Especificar endpoints de saldo e cancellation-deadline para Engenharia. Definir contratos de fallback.</td>
+              <td>PM + Eng</td>
+              <td><span class="pill pill-next">Semana 3</span></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>Teste de usabilidade com 3 usuários: "O que acontece com seus créditos se você cancelar essa reserva?" — validar compreensão sem ajuda.</td>
+              <td>UX Research</td>
+              <td><span class="pill pill-next">Sprint 2</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
