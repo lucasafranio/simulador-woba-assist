@@ -20,6 +20,12 @@ const {
   SlackAppScreenBlock, SlackLocationBlock, SlackVoiceBlock,
   SlackModal,
   renderSlackText,
+  // App (Clara) components
+  AppPhone, AppStatusBar, AppClaraHeader, AppClaraEmpty, AppClaraInput,
+  ClaraBotMsg, ClaraUserMsg, ClaraSpaceCard, ClaraRoomGroup, ClaraChips,
+  ClaraInfoCard, ClaraSuccessCard, ClaraTicketCard, ClaraGiftCard,
+  ClaraRSVPCard, ClaraLocationCard, ClaraVoiceMsg,
+  ClaraDivider, ClaraFlowReply, ClaraTyping,
 } = window;
 
 const SCENARIOS = window.ALL_SCENARIOS || window.SCENARIOS;
@@ -144,7 +150,7 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     const sid = params.get('s');
     const urlPlatform = params.get('platform');
-    if (urlPlatform === 'whatsapp' || urlPlatform === 'slack') setTweak('platform', urlPlatform);
+    if (['whatsapp', 'slack', 'app'].includes(urlPlatform)) setTweak('platform', urlPlatform);
     if (sid) {
       const scenario = SCENARIOS.find(s => s.id === sid);
       if (scenario) {
@@ -526,6 +532,92 @@ function App() {
     }
   };
 
+  /* ─── App (Clara) message renderer ─── */
+  const renderAppMsg = (m) => {
+    switch (m.kind) {
+      case 'bot-text':
+        return <ClaraBotMsg key={m.id}>{renderText(m.text)}</ClaraBotMsg>;
+      case 'user-text':
+        return <ClaraUserMsg key={m.id}>{m.text}</ClaraUserMsg>;
+      case 'day-divider':
+        return <ClaraDivider key={m.id} label={m.label}/>;
+      case 'room':
+      case 'room-compact':
+        return <ClaraRoomGroup key={m.id} rooms={[m.room]}/>;
+      case 'carousel':
+        return <ClaraRoomGroup key={m.id} rooms={m.rooms}/>;
+      case 'pill-room':
+        return <ClaraRoomGroup key={m.id} rooms={[m.room]}/>;
+      case 'flow-reply':
+        return <ClaraFlowReply key={m.id} label={m.label}/>;
+      case 'info-card':
+        return <ClaraInfoCard key={m.id} title={m.title} lines={m.lines || []} action={m.action} accent={m.accent}/>;
+      case 'gift-card':
+        return <ClaraGiftCard key={m.id} emoji={m.emoji} big={m.big} small={m.small}/>;
+      case 'app-screen':
+        return <ClaraSuccessCard key={m.id} title={m.title} lines={m.lines || []} success={m.success}/>;
+      case 'ticket-card':
+        return <ClaraTicketCard key={m.id} id={m.ticketId} severity={m.severity} eta={m.eta} status={m.status}/>;
+      case 'rsvp-card':
+        return <ClaraRSVPCard key={m.id} items={m.items}/>;
+      case 'location-card':
+        return <ClaraLocationCard key={m.id} title={m.title} address={m.address}/>;
+      case 'voice-message':
+        return <ClaraVoiceMsg key={m.id} side={m.side} duration={m.duration}/>;
+      case 'inline-quick-replies':
+        return <ClaraChips key={m.id} items={m.items} onPick={(text) => {
+          push({ kind: 'user-text', text, time: nextTime(), status: 'read', id: rid() });
+          advanceNext();
+        }}/>;
+      case 'slash-command':
+        return <ClaraUserMsg key={m.id}>{m.text}</ClaraUserMsg>;
+      default: return null;
+    }
+  };
+
+  /* ─── App (Clara) UI ─── */
+  const renderAppUI = () => (
+    <>
+      <div className="cap">
+        Simulador · <b>App</b> · Clara
+        {activeScenario && <> · <span style={{ color: '#fff' }}>{activeScenario.p} {activeScenario.title}</span></>}
+      </div>
+      <AppPhone>
+        <AppStatusBar/>
+        <AppClaraHeader onNew={() => { reset(); }}/>
+        <div ref={scrollRef} style={{
+          flex: 1, minHeight: 0, overflowY: 'auto',
+          background: '#f8f7f4',
+          display: 'flex', flexDirection: 'column',
+        }}>
+          {msgs.length === 0 && (
+            <AppClaraEmpty onChip={(chip) => sendUser(chip)}/>
+          )}
+          {msgs.length > 0 && (
+            <div style={{
+              flex: 1, padding: '16px 16px 8px',
+              display: 'flex', flexDirection: 'column', gap: 12,
+            }}>
+              {msgs.map(renderAppMsg)}
+              {typing && <ClaraTyping/>}
+              {!typing && freeFormQuickReplies && (
+                <ClaraChips items={freeFormQuickReplies} onPick={sendUser}/>
+              )}
+              <div style={{ height: 8 }}/>
+            </div>
+          )}
+        </div>
+        <AppClaraInput value={input} onChange={setInput} onSend={() => sendUser(input)}/>
+        <ScenarioSheet
+          open={!!scenarioSheet}
+          sheet={scenarioSheet}
+          onClose={() => setScenarioSheet(null)}
+          onConfirm={() => { setScenarioSheet(null); advanceNext(); }}
+        />
+      </AppPhone>
+    </>
+  );
+
   /* ─── Slack UI ─── */
   const renderSlackUI = () => (
     <>
@@ -611,7 +703,7 @@ function App() {
 
   return (
     <>
-      {platform === 'slack' ? renderSlackUI() : renderWAUI()}
+      {platform === 'app' ? renderAppUI() : platform === 'slack' ? renderSlackUI() : renderWAUI()}
 
       {/* Scenario trigger + drawer */}
       <ScenarioTrigger count={platformScenarios.length} onClick={() => setSidebarOpen(true)} platform={platform}/>
@@ -971,7 +1063,7 @@ function buildScenarioSpec(scenario, platform) {
   if (scenario.summary) contextParts.push(`promessa central: ${scenario.summary}`);
 
   return {
-    platformLabel: platform === 'slack' ? 'Slack' : 'WhatsApp',
+    platformLabel: platform === 'slack' ? 'Slack' : platform === 'app' ? 'App' : 'WhatsApp',
     purpose: `Este cenário existe para demonstrar ${normalizeScenarioLead(scenario.summary)}. Ele comunica qual proposta de produto a Woba Assist entrega nesse momento da jornada e como a conversa reduz atrito para o usuário.`,
     whenToUse: `Use este fluxo quando o contexto do usuário combinar com ${scenario.category.toLowerCase()} e a intenção principal for "${scenario.title}". A ideia aqui não é abrir uma conversa genérica, e sim conduzir uma tarefa específica com o mínimo de fricção.`,
     trigger: firstUser

@@ -118,15 +118,15 @@ function ScenarioSidebar({ open, scenarios, activeId, onPick, onClose, onReset, 
 
           {/* Platform toggle */}
           <div style={{ display: 'flex', gap: 5 }}>
-            {[['whatsapp','💬 WhatsApp'],['slack','⚡ Slack']].map(([p, label]) => (
+            {[['whatsapp','💬 WhatsApp'],['slack','⚡ Slack'],['app','📱 App']].map(([p, label]) => (
               <button key={p} onClick={() => onPlatformChange?.(p)} style={{
-                flex: 1, padding: '7px 8px',
+                flex: 1, padding: '7px 6px',
                 background: platform === p ? '#1a1810' : '#fff',
                 color: platform === p ? '#fff' : '#71716a',
                 border: '1px solid ' + (platform === p ? '#1a1810' : '#e3e2dc'),
-                borderRadius: 8, fontSize: 12.5, fontWeight: 600,
+                borderRadius: 8, fontSize: 11.5, fontWeight: 600,
                 cursor: 'pointer', fontFamily: 'inherit',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
               }}>{label}</button>
             ))}
           </div>
@@ -327,11 +327,16 @@ function ScenarioSidebar({ open, scenarios, activeId, onPick, onClose, onReset, 
 /* ─────────── Trigger button — bottom-left of viewport ─────────── */
 function ScenarioTrigger({ onClick, count, platform = 'whatsapp' }) {
   const isSlack = platform === 'slack';
+  const isApp   = platform === 'app';
+  const bg    = isSlack ? '#4a154b' : isApp ? '#111' : '#000';
+  const badge = isSlack ? '#e8b0e8' : isApp ? '#f9e10d' : '#f9e10d';
+  const badgeText = isSlack ? '#4a154b' : '#1a1810';
+  const icon  = isSlack ? '⚡' : isApp ? '📱' : '💬';
   return (
     <button onClick={onClick} style={{
       position: 'fixed', left: 16, bottom: 16,
       zIndex: 50,
-      background: isSlack ? '#4a154b' : '#000', color: '#fff',
+      background: bg, color: '#fff',
       border: 0, borderRadius: 999,
       padding: '11px 16px',
       fontFamily: 'var(--font-ui)', fontSize: 13.5, fontWeight: 600,
@@ -343,10 +348,10 @@ function ScenarioTrigger({ onClick, count, platform = 'whatsapp' }) {
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
         <path d="M5 5h6v6H5zM13 5h6v6h-6zM5 13h6v6H5zM13 13h6v6h-6z"/>
       </svg>
-      {isSlack ? '⚡' : '💬'} Cenários
+      {icon} Cenários
       <span style={{
-        background: isSlack ? '#e8b0e8' : '#f9e10d',
-        color: isSlack ? '#4a154b' : '#1a1810',
+        background: badge,
+        color: badgeText,
         fontSize: 11, fontWeight: 700,
         padding: '2px 7px', borderRadius: 999,
         letterSpacing: '0.02em',
