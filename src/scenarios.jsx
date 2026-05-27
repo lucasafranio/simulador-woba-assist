@@ -551,6 +551,141 @@ const SCENARIOS = [
     ],
   },
 
+  /* ─────────── N-06A — CSAT do agente (positivo) ─────────── */
+  {
+    id: 'n06a', p: 'N-06A',
+    title: 'CSAT — conversa resolvida',
+    category: 'Pós-atendimento',
+    summary: 'Após resolver qualquer assunto, Sofia pergunta se conseguiu ajudar. Caminho positivo com encerramento limpo.',
+    color: '#25c265',
+    startTime: { h: 11, m: 14 },
+    steps: [
+      { kind: 'bot', text: 'Reserva confirmada ✅\n**Tribbos** · sala 02 · amanhã 10h–12h' },
+      { kind: 'bot', delay: 900, typing: 600, text: 'Consegui te ajudar com isso? 😊' },
+      { kind: 'quick-replies', delay: 300, items: ['Sim, resolveu 👍', 'Não totalmente'] },
+      { kind: 'user', delay: 2000, text: 'Sim, resolveu 👍' },
+      { kind: 'bot', typing: 600, text: 'Que ótimo! 💛 Qualquer outra coisa, é só me chamar.' },
+    ],
+  },
+
+  /* ─────────── N-06B — CSAT do agente (negativo) ─────────── */
+  {
+    id: 'n06b', p: 'N-06B',
+    title: 'CSAT — não resolvido',
+    category: 'Pós-atendimento',
+    summary: 'CSAT negativo com chips de motivo. Usuário sinaliza o que faltou — alimenta melhoria contínua do agente.',
+    color: '#de6530',
+    startTime: { h: 15, m: 40 },
+    steps: [
+      { kind: 'bot', text: 'Encaminhei sua dúvida pro time de suporte 📨\nEles te retornam em até **8 min**.' },
+      { kind: 'bot', delay: 900, typing: 600, text: 'Consegui te ajudar com isso? 😊' },
+      { kind: 'quick-replies', delay: 300, items: ['Sim, resolveu 👍', 'Não totalmente'] },
+      { kind: 'user', delay: 2000, text: 'Não totalmente' },
+      { kind: 'bot', typing: 700, text: 'Que pena 😕\n\nO que eu poderia ter feito melhor? *(opcional)*' },
+      { kind: 'quick-replies', delay: 300, items: ['Resposta incompleta', 'Demorou demais', 'Não entendeu o problema', 'Outro motivo'] },
+      { kind: 'user', delay: 2000, text: 'Resposta incompleta' },
+      { kind: 'bot', typing: 900, text: 'Obrigada pelo feedback 🙏 Vou usar isso pra melhorar.\n\nSe ainda precisar, pode me chamar ou falar direto com o suporte.' },
+    ],
+  },
+
+  /* ─────────── H-01 — Histórico · última reserva ─────────── */
+  {
+    id: 'h01', p: 'H-01',
+    title: 'Última reserva',
+    category: 'Histórico & Preferências',
+    summary: 'Usuário pergunta sobre a última reserva — Sofia responde com card e oferece reservar de novo.',
+    color: '#3a80ce',
+    startTime: { h: 9, m: 8 },
+    steps: [
+      { kind: 'user', text: 'qual foi minha última reserva?' },
+      { kind: 'bot', typing: 900, text: 'Achei aqui 👇' },
+      { kind: 'info-card', delay: 400,
+        title: 'Tribbos Coworking · sala 02',
+        lines: ['📅 14/05 · semana passada · 10:00–12:00', '👥 5 pessoas · 14 créditos', '✅ Check-in realizado'],
+      },
+      { kind: 'bot', delay: 500, text: 'Quer reservar o mesmo espaço de novo?' },
+      { kind: 'quick-replies', delay: 300, items: ['Reservar de novo', 'Ver histórico completo', 'Não, obrigado'] },
+      { kind: 'user', delay: 2000, text: 'Reservar de novo' },
+      { kind: 'bot', typing: 800, text: 'Boa! Para quando? Posso manter o mesmo horário (**10h–12h**)?' },
+      { kind: 'quick-replies', delay: 300, items: ['Amanhã 10h', 'Essa semana', 'Outra data'] },
+    ],
+  },
+
+  /* ─────────── H-02 — Histórico · espaços favoritos ─────────── */
+  {
+    id: 'h02', p: 'H-02',
+    title: 'Espaços favoritos',
+    category: 'Histórico & Preferências',
+    summary: 'Sofia analisa o padrão das últimas reservas e revela o top 3 de coworkings e a janela horária preferida.',
+    color: '#a768ff',
+    startTime: { h: 13, m: 22 },
+    steps: [
+      { kind: 'user', text: 'onde eu mais costumo reservar?' },
+      { kind: 'bot', typing: 1100, text: 'Analisei suas últimas **12 reservas**. Veja seu padrão 👇' },
+      { kind: 'info-card', delay: 400,
+        title: '📊 Seus espaços mais frequentes',
+        lines: [
+          '🥇 Tribbos Coworking — 5 reservas',
+          '🥈 Vila Olímpia Hub — 4 reservas',
+          '🥉 WorkBricks Itaim — 3 reservas',
+        ],
+      },
+      { kind: 'bot', delay: 500, text: '**Terças de manhã** são sua janela mais frequente ⏰\n\nQuer reservar em algum deles agora?' },
+      { kind: 'quick-replies', delay: 300, items: ['Tribbos', 'Vila Olímpia', 'Itaim', 'Buscar outro'] },
+    ],
+  },
+
+  /* ─────────── H-03 — Histórico · consumo de créditos ─────────── */
+  {
+    id: 'h03', p: 'H-03',
+    title: 'Consumo de créditos',
+    category: 'Histórico & Preferências',
+    summary: 'Sofia puxa o extrato do mês atual e projeta quantas reservas ainda cabem no saldo restante.',
+    color: '#fe8c14',
+    startTime: { h: 16, m: 44 },
+    steps: [
+      { kind: 'user', text: 'quanto crédito eu usei esse mês?' },
+      { kind: 'bot', typing: 1000, text: 'Puxando seu extrato de maio 2026…' },
+      { kind: 'info-card', delay: 700,
+        title: '💳 Extrato · maio 2026',
+        lines: [
+          'Reservas realizadas: 6',
+          'Créditos usados: 48 de 80',
+          'Créditos restantes: 32',
+          'Maior uso: Tribbos (21 créd.)',
+          'Renovação: 01/06/2026',
+        ],
+      },
+      { kind: 'bot', delay: 400, text: 'Você ainda tem **32 créditos** — dá pra mais 4 reservas no seu padrão de uso.\n\nO plano renova em **01/06**.' },
+      { kind: 'quick-replies', delay: 300, items: ['Ver extrato no app', 'Reservar agora', 'Entendido 👍'] },
+    ],
+  },
+
+  /* ─────────── H-04 — Histórico · salvar preferência ─────────── */
+  {
+    id: 'h04', p: 'H-04',
+    title: 'Salvar preferência',
+    category: 'Histórico & Preferências',
+    summary: 'Usuário define região e capacidade padrão para buscas futuras. Sofia confirma, salva e aplica na próxima busca.',
+    color: '#81c42b',
+    startTime: { h: 10, m: 5 },
+    steps: [
+      { kind: 'user', text: 'quero que você me sugira sempre salas em Pinheiros pra até 5 pessoas' },
+      { kind: 'bot', typing: 1000, text: 'Anotado! ✍️ Vou guardar como sua preferência padrão:' },
+      { kind: 'info-card', delay: 400,
+        title: '⭐ Preferência salva',
+        lines: [
+          '📍 Região: Pinheiros, São Paulo',
+          '👥 Capacidade: até 5 pessoas',
+        ],
+      },
+      { kind: 'bot', delay: 500, text: 'Da próxima vez que você pedir uma sala sem especificar o local, começo por **Pinheiros**.\n\nQuer adicionar mais alguma preferência?' },
+      { kind: 'quick-replies', delay: 300, items: ['Adicionar horário fixo', 'Mudar região', 'Tá ótimo, obrigado!'] },
+      { kind: 'user', delay: 2000, text: 'Tá ótimo, obrigado!' },
+      { kind: 'bot', typing: 600, text: 'Show! 💛 Preferências salvas. Próxima busca já vai ser mais rápida.' },
+    ],
+  },
+
   /* ─────────── I-04 — Reservar por voz ─────────── */
   {
     id: 'i04', p: 'I-04',

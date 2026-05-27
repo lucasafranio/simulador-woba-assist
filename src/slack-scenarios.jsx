@@ -9,6 +9,8 @@ const SLASH_PREFIX = {
   'p06': { kind: 'slash-command', text: '/problema sala' },
   'p14': { kind: 'slash-command', text: '/chamado' },
   'p15': { kind: 'slash-command', text: '/ajuda creditos' },
+  'h01': { kind: 'slash-command', text: '/historico ultima' },
+  'h03': { kind: 'slash-command', text: '/historico creditos' },
 };
 
 const TEXT_FIX = {
