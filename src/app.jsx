@@ -8,7 +8,7 @@ const {
   InlineActionCard, FlowReply, QuickReplies, InlineChoicesCard,
   FlowSheet,
   InfoCard, PillRoomCard, GiftCard, AppScreenCard, TicketStatusCard, RSVPCard,
-  LocationCard, VoiceMessage, ScenarioSheet,
+  LocationCard, VoiceMessage, ScenarioSheet, SpaceDaysCard,
   ScenarioSidebar, ScenarioTrigger,
   TweaksPanel, useTweaks, TweakSection, TweakRadio, TweakToggle, TweakSelect, TweakButton,
   // Slack components
@@ -18,14 +18,14 @@ const {
   SlackInfoBlock, SlackRoomBlock, SlackRSVPBlock,
   SlackTicketBlock, SlackGiftBlock, SlackFlowReply,
   SlackAppScreenBlock, SlackLocationBlock, SlackVoiceBlock,
-  SlackModal,
+  SlackModal, SlackSpaceDaysBlock,
   renderSlackText,
   // App (Clara) components
   AppPhone, AppStatusBar, AppClaraHeader, AppClaraEmpty, AppClaraInput,
   ClaraBotMsg, ClaraUserMsg, ClaraSpaceCard, ClaraRoomGroup, ClaraChips,
   ClaraInfoCard, ClaraSuccessCard, ClaraTicketCard, ClaraGiftCard,
   ClaraRSVPCard, ClaraLocationCard, ClaraVoiceMsg,
-  ClaraDivider, ClaraFlowReply, ClaraTyping,
+  ClaraDivider, ClaraFlowReply, ClaraTyping, ClaraSpaceDaysCard,
 } = window;
 
 const SCENARIOS = window.ALL_SCENARIOS || window.SCENARIOS;
@@ -276,6 +276,7 @@ function App() {
     'bot', 'room', 'pill-room', 'carousel', 'quick-replies',
     'info-card', 'gift-card', 'app-screen', 'ticket-card', 'rsvp-card',
     'location-card', 'voice-message', 'open-sheet', 'flow-submitted', 'slash-command',
+    'space-days',
   ]);
 
   const playScenario = useCallback(async (scenario) => {
@@ -381,6 +382,10 @@ function App() {
           push({ kind: 'location-card', title: step.title, address: step.address, mapImage: step.mapImage, time: nextTime(), id: rid() });
           break;
         }
+        case 'space-days': {
+          push({ kind: 'space-days', title: step.title, subtitle: step.subtitle, days: step.days, time: nextTime(), id: rid() });
+          break;
+        }
         case 'voice-message': {
           push({ kind: 'voice-message', side: step.side || 'user', duration: step.duration || '0:08', time: nextTime(), status: step.status || 'read', id: rid() });
           break;
@@ -473,6 +478,11 @@ function App() {
         return <RSVPCard key={m.id} items={m.items} time={m.time}/>;
       case 'location-card':
         return <LocationCard key={m.id} title={m.title} address={m.address} mapImage={m.mapImage} time={m.time}/>;
+      case 'space-days':
+        return <SpaceDaysCard key={m.id} title={m.title} subtitle={m.subtitle} days={m.days} time={m.time} onAction={(s) => {
+          push({ kind: 'user-text', text: `Ir junto · ${s.coworking}`, time: nextTime(), status: 'read', id: rid() });
+          advanceNext();
+        }}/>;
       case 'voice-message':
         return <VoiceMessage key={m.id} side={m.side} duration={m.duration} time={m.time} status={m.status}/>;
       case 'inline-quick-replies':
@@ -521,6 +531,11 @@ function App() {
         return <SlackRSVPBlock key={m.id} items={m.items} time={m.time}/>;
       case 'location-card':
         return <SlackLocationBlock key={m.id} title={m.title} address={m.address} mapImage={m.mapImage} time={m.time}/>;
+      case 'space-days':
+        return <SlackSpaceDaysBlock key={m.id} days={m.days} time={m.time} onAction={(s) => {
+          push({ kind: 'user-text', text: `Ir junto · ${s.coworking}`, time: nextTime(), status: 'read', id: rid() });
+          advanceNext();
+        }}/>;
       case 'voice-message':
         return <SlackVoiceBlock key={m.id} side={m.side} duration={m.duration} time={m.time}/>;
       case 'inline-quick-replies':
@@ -562,6 +577,11 @@ function App() {
         return <ClaraRSVPCard key={m.id} items={m.items}/>;
       case 'location-card':
         return <ClaraLocationCard key={m.id} title={m.title} address={m.address}/>;
+      case 'space-days':
+        return <ClaraSpaceDaysCard key={m.id} days={m.days} onAction={(s) => {
+          push({ kind: 'user-text', text: `Ir junto · ${s.coworking}`, time: nextTime(), status: 'read', id: rid() });
+          advanceNext();
+        }}/>;
       case 'voice-message':
         return <ClaraVoiceMsg key={m.id} side={m.side} duration={m.duration}/>;
       case 'inline-quick-replies':

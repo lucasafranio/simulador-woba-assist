@@ -757,6 +757,87 @@ const SCENARIOS = [
       { kind: 'bot', typing: 1100, text: 'Tudo certo! Reserva confirmada ✅\n\n🏢 **Tribbos** · sala 02 · amanhã 14h–17h\n🪑 Mesa individual inclusa\n\n💳 **22,25 créditos** debitados\n☕ Café na mesa te espera!' },
     ],
   },
+
+  /* ─────────── P-20 — Onde meu time vai (espaços por data + colegas) ─────────── */
+  {
+    id: 'p20', p: 'P-20',
+    title: 'Onde meu time vai',
+    category: 'Coordenação de time',
+    summary: 'Espaços agrupados por data, com fotos e nomes dos colegas confirmados em cada espaço e dia. Decida onde ir junto.',
+    color: '#3a80ce',
+    startTime: { h: 8, m: 40 },
+    steps: [
+      { kind: 'user', text: 'onde meu time vai essa semana?' },
+      { kind: 'bot', typing: 1100, text: 'Dei uma olhada nas reservas do seu time 👀\n\nAgrupei por dia os espaços com mais gente confirmada — é só escolher onde ir junto 👇' },
+      { kind: 'space-days', delay: 500,
+        title: 'Seu time essa semana',
+        subtitle: '3 dias com colegas confirmados perto de você',
+        days: [
+          {
+            dow: 'QUA', dateNum: '17', label: 'Quarta · 17/06',
+            note: '6 colegas confirmados',
+            spaces: [
+              {
+                coworking: 'Tribbos Coworking', area: 'Centro', time: '10:00–17:00', credits: 7,
+                recommended: true,
+                action: 'Ir junto na quarta',
+                people: [
+                  { name: 'Joana Maciel', company: 'Acme', color: '#a768ff' },
+                  { name: 'Pedro Silva',  company: 'Acme', color: '#3a80ce' },
+                  { name: 'Marcelo Reis', company: 'Acme', color: '#fe8c14' },
+                  { name: 'Bia Nunes',    company: 'Loomi', color: '#25c265' },
+                ],
+              },
+              {
+                coworking: 'Hub Pinheiros', area: 'Pinheiros', time: '09:00–15:00', credits: 7.5,
+                action: 'Ir junto na quarta',
+                people: [
+                  { name: 'Rafael Dias', company: 'Loomi', color: '#ec4899' },
+                  { name: 'Lia Costa',   company: 'Loomi', color: '#de6530' },
+                ],
+              },
+            ],
+          },
+          {
+            dow: 'QUI', dateNum: '18', label: 'Quinta · 18/06',
+            note: '4 colegas confirmados',
+            spaces: [
+              {
+                coworking: 'Vila Olímpia Hub', area: 'Vila Olímpia', time: '09:00–13:00', credits: 8.5,
+                recommended: true,
+                action: 'Ir junto na quinta',
+                people: [
+                  { name: 'Joana Maciel', company: 'Acme', color: '#a768ff' },
+                  { name: 'Caio Mendes',  company: 'Acme', color: '#81c42b' },
+                  { name: 'Bia Nunes',    company: 'Loomi', color: '#25c265' },
+                  { name: 'Téo Ramos',    company: 'Nuvio', color: '#3a80ce' },
+                ],
+              },
+            ],
+          },
+          {
+            dow: 'SEX', dateNum: '19', label: 'Sexta · 19/06',
+            note: '3 colegas confirmados',
+            spaces: [
+              {
+                coworking: 'WorkBricks Itaim', area: 'Itaim Bibi', time: '14:00–18:00', credits: 9,
+                action: 'Ir junto na sexta',
+                people: [
+                  { name: 'Pedro Silva',  company: 'Acme', color: '#3a80ce' },
+                  { name: 'Marcelo Reis', company: 'Acme', color: '#fe8c14' },
+                  { name: 'Téo Ramos',    company: 'Nuvio', color: '#a768ff' },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      { kind: 'bot', delay: 600, text: 'Se topar algum, é só escolher que eu reservo o espaço pra você 💛' },
+      { kind: 'quick-replies', delay: 400, items: ['Quarta no Tribbos', 'Quinta na Vila Olímpia', 'Ver próxima semana'] },
+      { kind: 'user', delay: 2000, text: 'Quarta no Tribbos' },
+      { kind: 'bot', typing: 900, text: 'Reservado ✅\n\n**Tribbos · Centro** · quarta 17/06 · 10h–17h\n💳 7 créditos debitados\n\nVocê vai estar com **Joana**, **Pedro**, **Marcelo** e **Bia** — boa quarta! 👋' },
+    ],
+  },
 ];
 
 window.SCENARIOS = SCENARIOS;

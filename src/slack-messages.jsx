@@ -594,6 +594,106 @@ function SlackModal({ open, sheet, onClose, onConfirm }) {
   );
 }
 
+/* ─── Space Days block ─── */
+function SlackSpaceDaysBlock({ days = [], time, onAction }) {
+  const PALETTE = ['#a768ff', '#3a80ce', '#fe8c14', '#25c265', '#ec4899', '#de6530', '#81c42b'];
+  function inits(name) {
+    const p = String(name).trim().split(/\s+/);
+    return ((p[0]?.[0] || '') + (p[1]?.[0] || '')).toUpperCase();
+  }
+  function nameList(people) {
+    const first = people.map(p => p.name.split(' ')[0]);
+    if (first.length <= 2) return first.join(' e ');
+    return first.slice(0, -1).join(', ') + ' e ' + first[first.length - 1];
+  }
+  return (
+    <div style={{ padding: '2px 16px 2px 62px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+      {days.map((d, di) => (
+        <div key={di} style={{
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          borderLeft: '4px solid #f9e10d',
+          borderRadius: '0 8px 8px 0', maxWidth: 460, overflow: 'hidden',
+        }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 10,
+            padding: '10px 14px 8px',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+          }}>
+            <div style={{
+              width: 34, height: 38, borderRadius: 6, flexShrink: 0,
+              background: '#f9e10d', color: '#1a1810',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span style={{ fontSize: 8, fontWeight: 800, letterSpacing: '0.07em' }}>{d.dow}</span>
+              <span style={{ fontSize: 15, fontWeight: 800, lineHeight: 1 }}>{d.dateNum}</span>
+            </div>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 13.5, color: '#fff' }}>{d.label}</div>
+              <div style={{ fontSize: 12, color: '#ababad', marginTop: 1 }}>{d.note}</div>
+            </div>
+          </div>
+
+          {(d.spaces || []).map((s, si) => (
+            <div key={si}>
+              {si > 0 && <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '0 14px' }}/>}
+              <div style={{ padding: '10px 14px 0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap', marginBottom: 2 }}>
+                  <span style={{ fontWeight: 700, fontSize: 14, color: '#fff' }}>{s.coworking}</span>
+                  {s.recommended && (
+                    <span style={{
+                      background: 'rgba(249,225,13,0.14)', color: '#f0d80d',
+                      border: '1px solid rgba(249,225,13,0.3)',
+                      fontSize: 10.5, fontWeight: 600, padding: '2px 7px', borderRadius: 3,
+                    }}>★ Mais gente</span>
+                  )}
+                </div>
+                <div style={{ fontSize: 12.5, color: '#ababad', marginBottom: 8 }}>
+                  {[s.area, s.time, s.credits != null ? s.credits + ' créd.' : null].filter(Boolean).join(' · ')}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {s.people.slice(0, 4).map((p, i) => (
+                      <div key={i} style={{
+                        width: 26, height: 26, borderRadius: '50%',
+                        background: p.color || PALETTE[i % PALETTE.length],
+                        color: '#fff', fontSize: 9.5, fontWeight: 800,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        border: '1.5px solid #1a1d21', marginLeft: i > 0 ? -7 : 0,
+                        fontFamily: 'var(--font-display)',
+                      }}>{inits(p.name)}</div>
+                    ))}
+                    {s.people.length > 4 && (
+                      <div style={{
+                        width: 26, height: 26, borderRadius: '50%',
+                        background: 'rgba(255,255,255,0.1)', color: '#ababad',
+                        border: '1.5px solid #1a1d21', marginLeft: -7,
+                        fontSize: 9.5, fontWeight: 700,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>+{s.people.length - 4}</div>
+                    )}
+                  </div>
+                  <span style={{ fontSize: 12.5, color: '#d1d2d3' }}>{nameList(s.people)}</span>
+                </div>
+              </div>
+              <div style={{ padding: '0 14px 10px' }}>
+                <button onClick={() => onAction?.(s, d)} style={{
+                  background: '#007a5a', border: 0, color: '#fff',
+                  padding: '7px 16px', borderRadius: 4, fontSize: 13.5, fontWeight: 600,
+                  cursor: 'pointer', fontFamily: 'inherit',
+                }}>{s.action || 'Ir junto'}</button>
+              </div>
+            </div>
+          ))}
+          {di === days.length - 1 && time && (
+            <div style={{ textAlign: 'right', fontSize: 11, color: '#616061', padding: '0 14px 8px' }}>{time}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 Object.assign(window, {
   renderSlackText,
   SlackMessage, SlackUserMessage, SlackSlashCmd,
@@ -601,7 +701,7 @@ Object.assign(window, {
   SlackInfoBlock, SlackRoomBlock, SlackRSVPBlock,
   SlackTicketBlock, SlackGiftBlock, SlackFlowReply,
   SlackAppScreenBlock, SlackLocationBlock, SlackVoiceBlock,
-  SlackModal,
+  SlackModal, SlackSpaceDaysBlock,
 });
 
 })();

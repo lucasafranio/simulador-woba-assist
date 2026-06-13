@@ -675,4 +675,104 @@ window.ClaraDivider   = ClaraDivider;
 window.ClaraFlowReply = ClaraFlowReply;
 window.ClaraTyping    = ClaraTyping;
 
+// ── Space Days card (P-20 — Onde meu time vai) ──────────────────────────────
+function ClaraSpaceDaysCard({ days = [], onAction }) {
+  const PALETTE = ['#a768ff', '#3a80ce', '#fe8c14', '#25c265', '#ec4899', '#de6530', '#81c42b'];
+  function inits(name) {
+    const p = String(name).trim().split(/\s+/);
+    return ((p[0]?.[0] || '') + (p[1]?.[0] || '')).toUpperCase();
+  }
+  function nameList(people) {
+    const first = people.map(p => p.name.split(' ')[0]);
+    if (first.length <= 2) return first.join(' e ');
+    return first.slice(0, -1).join(', ') + ' e ' + first[first.length - 1];
+  }
+  return (
+    <div style={{ alignSelf: 'flex-start', width: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {days.map((d, di) => (
+        <div key={di} style={{
+          background: '#fff', border: '1px solid #e0dbd3',
+          borderRadius: di === 0 ? '4px 16px 16px 16px' : 16,
+          overflow: 'hidden',
+          boxShadow: '0 2px 8px -2px rgba(0,0,0,.06)',
+        }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 10,
+            padding: '11px 14px 9px', background: '#faf8f5',
+            borderBottom: '1px solid #f0ece6',
+          }}>
+            <div style={{
+              width: 36, height: 40, borderRadius: 8, flexShrink: 0,
+              background: '#f9e10d', color: '#1a1810',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span style={{ fontSize: 8, fontWeight: 800, letterSpacing: '0.07em', fontFamily: '"DM Sans",sans-serif' }}>{d.dow}</span>
+              <span style={{ fontSize: 16, fontWeight: 800, lineHeight: 1, fontFamily: '"DM Sans",sans-serif' }}>{d.dateNum}</span>
+            </div>
+            <div>
+              <div style={{ fontFamily: '"DM Sans",sans-serif', fontWeight: 700, fontSize: 13.5, color: '#111' }}>{d.label}</div>
+              <div style={{ fontFamily: '"Host Grotesk",sans-serif', fontSize: 11.5, color: '#777', marginTop: 1 }}>{d.note}</div>
+            </div>
+          </div>
+
+          {(d.spaces || []).map((s, si) => (
+            <div key={si}>
+              {si > 0 && <div style={{ height: 1, background: '#f0ece6' }}/>}
+              <div style={{ padding: '11px 14px 10px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6 }}>
+                  <div>
+                    <div style={{ fontFamily: '"DM Sans",sans-serif', fontWeight: 700, fontSize: 13.5, color: '#111' }}>{s.coworking}</div>
+                    <div style={{ fontFamily: '"Host Grotesk",sans-serif', fontSize: 11.5, color: '#777', marginTop: 2 }}>
+                      {[s.area, s.time, s.credits != null ? s.credits + ' créd.' : null].filter(Boolean).join(' · ')}
+                    </div>
+                  </div>
+                  {s.recommended && (
+                    <span style={{
+                      flexShrink: 0, fontSize: 10, fontWeight: 700,
+                      background: '#fef9c3', color: '#854d0e',
+                      padding: '2px 7px', borderRadius: 999, marginTop: 2,
+                      fontFamily: '"DM Sans",sans-serif',
+                    }}>★ Mais gente</span>
+                  )}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10 }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {s.people.slice(0, 4).map((p, i) => (
+                      <div key={i} style={{
+                        width: 26, height: 26, borderRadius: '50%',
+                        background: p.color || PALETTE[i % PALETTE.length],
+                        color: '#fff', fontSize: 9.5, fontWeight: 800,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        border: '1.5px solid #fff', marginLeft: i > 0 ? -7 : 0,
+                        fontFamily: '"DM Sans",sans-serif',
+                      }}>{inits(p.name)}</div>
+                    ))}
+                    {s.people.length > 4 && (
+                      <div style={{
+                        width: 26, height: 26, borderRadius: '50%',
+                        background: '#f0ece6', color: '#777',
+                        border: '1.5px solid #fff', marginLeft: -7,
+                        fontSize: 9.5, fontWeight: 700,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontFamily: '"DM Sans",sans-serif',
+                      }}>+{s.people.length - 4}</div>
+                    )}
+                  </div>
+                  <span style={{ fontFamily: '"Host Grotesk",sans-serif', fontSize: 12.5, color: '#333' }}>{nameList(s.people)}</span>
+                </div>
+                <button onClick={() => onAction?.(s, d)} style={{
+                  marginTop: 12, width: '100%', background: '#111', color: '#fff',
+                  border: 0, borderRadius: 999, padding: '9px 0',
+                  cursor: 'pointer', fontFamily: '"DM Sans",sans-serif', fontWeight: 700, fontSize: 13,
+                }}>{s.action || 'Ir junto'}</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+window.ClaraSpaceDaysCard = ClaraSpaceDaysCard;
+
 })();

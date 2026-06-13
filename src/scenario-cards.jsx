@@ -333,6 +333,130 @@ function LocationCard({ title, address, mapImage = 'assets/map-1.svg', time, act
   );
 }
 
+/* ─────────── SpaceDaysCard — espaços agrupados por data + colegas ─────────── */
+const AVA_PALETTE = ['#a768ff', '#3a80ce', '#fe8c14', '#25c265', '#ec4899', '#de6530', '#81c42b'];
+
+function initials(name) {
+  const parts = String(name).trim().split(/\s+/);
+  return ((parts[0]?.[0] || '') + (parts[1]?.[0] || '')).toUpperCase();
+}
+
+function PersonAvatar({ person, idx = 0, size = 28, overlap = false }) {
+  const color = person.color || AVA_PALETTE[idx % AVA_PALETTE.length];
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: '50%', flexShrink: 0,
+      background: color, color: '#fff',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: size * 0.38, fontWeight: 800, fontFamily: 'var(--font-display)',
+      letterSpacing: '-0.02em',
+      border: '1.5px solid var(--chat-bubble-bot)',
+      marginLeft: overlap && idx > 0 ? -8 : 0,
+    }}>{initials(person.name)}</div>
+  );
+}
+
+function nameList(people) {
+  const first = people.map(p => p.name.split(' ')[0]);
+  if (first.length <= 2) return first.join(' e ');
+  return first.slice(0, -1).join(', ') + ' e ' + first[first.length - 1];
+}
+
+function SpaceDaysCard({ days = [], time, onAction }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, padding: '1.5px 8px' }}>
+      {days.map((d, di) => (
+        <div key={di} style={{
+          maxWidth: '88%',
+          background: 'var(--chat-bubble-bot)',
+          borderRadius: di === 0 ? '0 12px 12px 12px' : '12px',
+          boxShadow: 'var(--chat-shadow)',
+          overflow: 'hidden',
+          fontFamily: 'var(--font-chat)',
+        }}>
+          {/* Cabeçalho do dia */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 10,
+            padding: '10px 12px 8px',
+            borderBottom: '1px solid var(--chat-divider)',
+          }}>
+            <div style={{
+              width: 38, height: 42, borderRadius: 8, flexShrink: 0,
+              background: 'var(--w-yellow)', color: 'var(--w-yellow-fg)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span style={{ fontSize: 8.5, fontWeight: 800, letterSpacing: '0.07em' }}>{d.dow}</span>
+              <span style={{ fontSize: 17, fontWeight: 800, lineHeight: 1 }}>{d.dateNum}</span>
+            </div>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--chat-text)' }}>{d.label}</div>
+              <div style={{ fontSize: 12, color: 'var(--chat-text-2)', marginTop: 1 }}>{d.note}</div>
+            </div>
+          </div>
+
+          {/* Espaços */}
+          {(d.spaces || []).map((s, si) => (
+            <div key={si}>
+              {si > 0 && <div style={{ height: 1, background: 'var(--chat-divider)' }}/>}
+              <div style={{ padding: '10px 12px 8px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6 }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--chat-text)', lineHeight: 1.2 }}>{s.coworking}</div>
+                    <div style={{ fontSize: 12, color: 'var(--chat-text-2)', marginTop: 2 }}>
+                      {[s.area, s.time, s.credits != null ? s.credits + ' créd.' : null].filter(Boolean).join(' · ')}
+                    </div>
+                  </div>
+                  {s.recommended && (
+                    <span style={{
+                      flexShrink: 0, fontSize: 10, fontWeight: 700,
+                      background: 'var(--w-yellow)', color: 'var(--w-yellow-fg)',
+                      padding: '2px 7px', borderRadius: 999, marginTop: 2,
+                    }}>★ Mais gente</span>
+                  )}
+                </div>
+
+                {/* Avatares + nomes numa linha */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 9 }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {s.people.slice(0, 4).map((p, i) => (
+                      <PersonAvatar key={i} person={p} idx={i} overlap/>
+                    ))}
+                    {s.people.length > 4 && (
+                      <div style={{
+                        width: 28, height: 28, borderRadius: '50%', marginLeft: -8, flexShrink: 0,
+                        background: 'rgba(255,255,255,0.1)', color: 'var(--chat-text-2)',
+                        border: '1.5px solid var(--chat-bubble-bot)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 10, fontWeight: 700,
+                      }}>+{s.people.length - 4}</div>
+                    )}
+                  </div>
+                  <span style={{ fontSize: 12.5, color: 'var(--chat-text)', lineHeight: 1.3 }}>
+                    {nameList(s.people)}
+                  </span>
+                </div>
+              </div>
+
+              <button onClick={() => onAction?.(s, d)} style={{
+                width: '100%', background: 'transparent',
+                border: 0, borderTop: '1px solid var(--chat-divider)',
+                color: 'var(--chat-link)', fontWeight: 600, fontSize: 14.5,
+                padding: '11px 0', fontFamily: 'inherit', cursor: 'pointer',
+              }}>
+                {s.action || 'Ir junto'}
+              </button>
+            </div>
+          ))}
+
+          {di === days.length - 1 && (
+            <div style={{ textAlign: 'right', fontSize: 11, color: 'var(--chat-text-3)', padding: '4px 10px 8px' }}>{time}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ─────────── RecurrenceSheet — rich recurrence picker ─────────── */
 function RecurrenceSheet({ sheet, onClose, onConfirm }) {
   const [freq, setFreq] = React.useState(sheet.defaultFreq || 'weekly');
@@ -742,7 +866,7 @@ function renderLine(s) {
 
 Object.assign(window, {
   InfoCard, PillRoomCard, GiftCard, AppScreenCard, TicketStatusCard, RSVPCard,
-  LocationCard, VoiceMessage, ScenarioSheet,
+  LocationCard, VoiceMessage, ScenarioSheet, SpaceDaysCard,
 });
 
 })();
