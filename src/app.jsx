@@ -1099,6 +1099,8 @@ function buildScenarioSpec(scenario, platform) {
       ? `O resultado esperado é que o usuário veja um estado final inequívoco no próprio canal, como confirmação, painel de status, resumo de envio ou conclusão de etapa.`
       : `O resultado esperado é que o usuário entenda a proposta, tome uma decisão e siga para a próxima etapa sem precisar sair do fluxo atual.`,
     success: `Consideramos este cenário bem-sucedido quando o usuário entende a proposta sem ambiguidade, conclui a ação principal em poucos passos e termina a interação com clareza sobre o que aconteceu depois. ${firstBot ? `A primeira mensagem precisa deixar isso evidente desde o início.` : ''}`,
+    // Cenários com spec escrita à mão (ex.: S-01..S-03) sobrescrevem o texto gerado
+    ...scenario.spec,
   };
 }
 
